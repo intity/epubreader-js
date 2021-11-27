@@ -49,6 +49,7 @@ export class Reader {
 
         this.book = ePub(this.settings.bookPath);
         this.rendition = this.book.renderTo('viewer', {
+            view: 'inline',
             width: '100%',
             height: '100%'
         });
