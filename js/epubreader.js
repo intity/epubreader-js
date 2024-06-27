@@ -563,8 +563,6 @@ module.exports = function (value) { return value !== _undefined && value !== nul
 /******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
@@ -3218,8 +3216,6 @@ class Reader {
 }
 
 event_emitter(Reader.prototype);
-})();
-
 var __webpack_exports__Reader = __webpack_exports__.m;
 export { __webpack_exports__Reader as Reader };
 

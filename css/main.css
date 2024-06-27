@@ -63,16 +63,16 @@ body {
 }
 
 #prev {
-	padding-left: 10px;
+	text-align: start;
 }
 
 #next {
 	text-align: end;
-	padding-right: 10px;
 }
 
 .arrow {
 	flex: 1;
+	padding: 0 10px;
 }
 
 .arrow:disabled,
@@ -147,6 +147,10 @@ only screen and (max-width: 568px) and (orientation: landscape) {
     #viewer.scrolled {
         height: calc(100% - 52px);
     }
+
+	.arrow span {
+		font-size: 32px;
+	}
 }
 
 /**
@@ -169,6 +173,10 @@ only screen and (min-width: 568px) and (max-width: 932px) and (orientation: land
     #viewer.scrolled {
         width: 100%;
     }
+
+	.arrow span {
+		font-size: 40px;
+	}
 }
 
 /**
@@ -189,4 +197,8 @@ only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: la
     #viewer.scrolled {
         width: 100%;
     }
+
+	.arrow span {
+		font-size: 50px;
+	}
 }
