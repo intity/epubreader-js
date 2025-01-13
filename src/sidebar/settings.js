@@ -44,7 +44,7 @@ export class SettingsPanel extends UIPanel {
 				fontSize: parseInt(e.target.value)
 			});
 		};
-		fontSize.setId("fontsize")
+		fontSize.setId("fontsize");
 		fontSizeRow.add(fontSizeLabel);
 		fontSizeRow.add(fontSize);
 
