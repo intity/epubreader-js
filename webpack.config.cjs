@@ -10,8 +10,11 @@ const config = {
 		path: path.resolve(__dirname, "dist"),
 		libraryTarget: "module"
 	},
+	externals: {
+		"epubjs": "epubjs"
+	},
 	optimization: {
-		minimize: false
+		usedExports: false
 	},
 	devServer: {
 		static: {
@@ -64,11 +67,11 @@ module.exports = (env, args) => {
 	if (args.optimizationMinimize) {
 		config.output.filename = "js/[name].min.js"
 		config.output.sourceMapFilename = "js/[name].min.js.map"
-		config.optimization.usedExports = false
 		config.optimization.minimize = true
 	} else {
 		config.output.filename = "js/[name].js"
 		config.output.sourceMapFilename = "js/[name].js.map"
+		config.optimization.minimize = false
 	}
 
 	return config;

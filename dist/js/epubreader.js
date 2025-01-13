@@ -561,17 +561,30 @@ module.exports = function (value) { return value !== _undefined && value !== nul
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ })();
 /******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  m: () => (/* binding */ Reader)
+  Reader: () => (/* binding */ Reader)
 });
 
 // EXTERNAL MODULE: ./node_modules/event-emitter/index.js
 var event_emitter = __webpack_require__(68);
-;// CONCATENATED MODULE: ./src/utils.js
+;// ./src/utils.js
 const d = (obj, prop) => obj ? obj[prop] : undefined
 
 const q = (src, dst, ext, prop) => {
@@ -630,7 +643,7 @@ const detectMobile = () => {
     ]
     return matches.some((i) => navigator.userAgent.match(i))
 }
-;// CONCATENATED MODULE: ./src/storage.js
+;// ./src/storage.js
 class Storage {
 
 	constructor() {
@@ -731,7 +744,7 @@ class Storage {
 		}
 	}
 }
-;// CONCATENATED MODULE: ./src/strings.js
+;// ./src/strings.js
 class Strings {
 
 	constructor(reader) {
@@ -939,7 +952,7 @@ class Strings {
 
 	get(key) { return this.values[this.language][key] || "???"; }
 }
-;// CONCATENATED MODULE: ./src/ui.js
+;// ./src/ui.js
 /**
  * @author mrdoob https://github.com/mrdoob/ui.js
  */
@@ -1704,7 +1717,7 @@ class UIBox extends UIElement {
 		this.add(items);
 	}
 }
-;// CONCATENATED MODULE: ./src/toolbar.js
+;// ./src/toolbar.js
 
 
 class Toolbar {
@@ -1924,7 +1937,7 @@ class Toolbar {
 		}
 	}
 }
-;// CONCATENATED MODULE: ./src/content.js
+;// ./src/content.js
 
 
 class Content {
@@ -2043,7 +2056,7 @@ class Content {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/toc.js
+;// ./src/sidebar/toc.js
 
 
 class TocPanel extends UIPanel {
@@ -2134,7 +2147,7 @@ class TocPanel extends UIPanel {
 		return list;
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/bookmarks.js
+;// ./src/sidebar/bookmarks.js
 
 
 class BookmarksPanel extends UIPanel {
@@ -2271,7 +2284,7 @@ class BookmarksPanel extends UIPanel {
 		this.bookmarks.add(item);
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/annotations.js
+;// ./src/sidebar/annotations.js
 
 
 class AnnotationsPanel extends UIPanel {
@@ -2381,7 +2394,7 @@ class AnnotationsPanel extends UIPanel {
 		this.update();
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/search.js
+;// ./src/sidebar/search.js
 
 
 class SearchPanel extends UIPanel {
@@ -2456,7 +2469,7 @@ class SearchPanel extends UIPanel {
 		this.items.add(item);
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/settings.js
+;// ./src/sidebar/settings.js
 
 
 class SettingsPanel extends UIPanel {
@@ -2627,7 +2640,7 @@ class SettingsPanel extends UIPanel {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/metadata.js
+;// ./src/sidebar/metadata.js
 
 
 class MetadataPanel extends UIPanel {
@@ -2693,7 +2706,7 @@ class MetadataPanel extends UIPanel {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar.js
+;// ./src/sidebar.js
 
 
 
@@ -2773,7 +2786,7 @@ class Sidebar {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/notedlg.js
+;// ./src/notedlg.js
 
 
 
@@ -2846,7 +2859,7 @@ class NoteDlg {
         });
     }
 }
-;// CONCATENATED MODULE: ./src/reader.js
+;// ./src/reader.js
 
 
 
@@ -3216,7 +3229,7 @@ class Reader {
 }
 
 event_emitter(Reader.prototype);
-var __webpack_exports__Reader = __webpack_exports__.m;
+var __webpack_exports__Reader = __webpack_exports__.Reader;
 export { __webpack_exports__Reader as Reader };
 
 //# sourceMappingURL=epubreader.js.map

@@ -1,12 +1,16 @@
 {
     "name": "epubreader-js",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "homepage": "https://github.com/intity/epubreader-js",
     "repository": {
         "type": "git",
         "url": "https://github.com/intity/epubreader-js.git"
     },
-    "description": "ePub.js Reader",
+    "directories": {
+        "dist": "dist",
+        "docs": "docs"
+    },
+    "description": "epub reader",
     "bugs": {
         "url": "https://github.com/intity/epubreader-js/issues"
     },
@@ -20,6 +24,12 @@
     },
     "author": "fchasen@gmail.com",
     "license": "MIT",
+    "contributors": [
+        {
+            "name": "vite",
+            "email": "nuget@list.ru"
+        }
+    ],
     "devDependencies": {
         "copy-webpack-plugin": "^8.1.1",
         "webpack": "^5.90.3",
