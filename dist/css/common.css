@@ -1,4 +1,5 @@
-#sidebar, #notedlg {
+#sidebar,
+#notedlg {
 	display: grid;
 	overflow: hidden;
 	position: absolute;
@@ -75,6 +76,10 @@
 	background-image: url("../img/bookmarks.svg");
 }
 
+#btn-bg.box input {
+	background-image: url("../img/background.svg");
+}
+
 #btn-f.box input {
 	background-image: url("../img/resize-full.svg");
 }
@@ -106,8 +111,7 @@
 /**
  * iPhone 5 : 320 x 568
  */
-@media
-only screen and (width: 320px) and (orientation: portrait),
+@media only screen and (width: 320px) and (orientation: portrait),
 only screen and (height: 320px) and (orientation: landscape) {
 	.box {
 		min-height: 30px;
