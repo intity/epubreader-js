@@ -23,7 +23,7 @@ const config = {
 		hot: false,
 		liveReload: true,
 		compress: true,
-		port: 8080
+		port: 8088
 	},
 	experiments: {
 		outputModule: true
