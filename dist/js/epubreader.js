@@ -584,7 +584,7 @@ __webpack_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: ./node_modules/event-emitter/index.js
 var event_emitter = __webpack_require__(68);
-;// ./src/utils.js
+;// CONCATENATED MODULE: ./src/utils.js
 const d = (obj, prop) => obj ? obj[prop] : undefined
 
 const q = (src, dst, ext, prop) => {
@@ -643,7 +643,7 @@ const detectMobile = () => {
     ]
     return matches.some((i) => navigator.userAgent.match(i))
 }
-;// ./src/storage.js
+;// CONCATENATED MODULE: ./src/storage.js
 class Storage {
 
 	constructor() {
@@ -744,7 +744,7 @@ class Storage {
 		}
 	}
 }
-;// ./src/strings.js
+;// CONCATENATED MODULE: ./src/strings.js
 class Strings {
 
 	constructor(reader) {
@@ -759,6 +759,7 @@ class Strings {
 				"toolbar/openbook/error": "Your browser does not support the required features.\nPlease use a modern browser such as Google Chrome, or Mozilla Firefox.",
 				"toolbar/bookmark": "Add this page to bookmarks",
 				"toolbar/fullscreen": "Fullscreen",
+				"toolbar/background": "Change background",
 
 				"sidebar/close": "Close Sidebar",
 				"sidebar/contents": "Contents",
@@ -807,6 +808,7 @@ class Strings {
 				"toolbar/openbook/error": "Votre navigateur ne prend pas en charge les fonctions nécessaires.\nVeuillez utiliser un navigateur moderne tel que Google Chrome ou Mozilla Firefox.",
 				"toolbar/bookmark": "Insérer un marque page ici",
 				"toolbar/fullscreen": "Plein écran",
+				"toolbar/background": "Changer l'arrière-plan",
 
 				"sidebar/close": "???",
 				"sidebar/contents": "Sommaire",
@@ -855,6 +857,7 @@ class Strings {
 				"toolbar/openbook/error": "ご利用のブラウザは必要な機能をサポートしていません。\nGoogle Chrome、Mozilla Firefox、その他のモダンなブラウザでご利用ください。",
 				"toolbar/bookmark": "このページに栞を設定する",
 				"toolbar/fullscreen": "フルスクリーン",
+				"toolbar/background": "背景を変更する",
 
 				"sidebar/close": "???",
 				"sidebar/contents": "目次",
@@ -903,6 +906,7 @@ class Strings {
 				"toolbar/openbook/error": "Ваш браузер не поддерживает необходимые функции.\nПожалуйста, используйте современный браузер, такой как Google Chrome или Mozilla Firefox.",
 				"toolbar/bookmark": "Добавить эту страницу в закладки",
 				"toolbar/fullscreen": "Полноэкранный режим",
+				"toolbar/background": "изменить фон",
 
 				"sidebar/close": "Закрыть боковую панель",
 				"sidebar/contents": "Содержание",
@@ -942,6 +946,55 @@ class Strings {
 
 				"notedlg/label": "Заметка",
 				"notedlg/add": "Добавить"
+			},
+			vi: {
+				"toolbar/sidebar": "Thanh bên",
+				"toolbar/prev": "Trang trước",
+				"toolbar/next": "Trang kế tiếp",
+				"toolbar/openbook": "Mở sách",
+				"toolbar/openbook/error": "Trình duyệt của bạn không hỗ trợ các tính năng cần thiết. Vui lòng sử dụng trình duyệt hiện đại như Google Chrome hoặc Mozilla Firefox.",
+				"toolbar/bookmark": "Thêm trang này vào dấu trang",
+				"toolbar/fullscreen": "Toàn màn hình",
+				"toolbar/background": "Đổi màu nền",
+
+				"sidebar/close": "Đóng thanh bên",
+				"sidebar/contents": "Nội dung",
+				"sidebar/bookmarks": "Dấu trang",
+				"sidebar/bookmarks/add": "Thêm dấu trang",
+				"sidebar/bookmarks/remove": "Xóa dấu trang",
+				"sidebar/bookmarks/clear": "???",
+				"sidebar/annotations": "Chú thích",
+				"sidebar/annotations/add": "Thêm chú thích",
+				"sidebar/annotations/remove": "Xóa chú thích",
+				"sidebar/annotations/clear": "???",
+				"sidebar/annotations/anchor": "???",
+				"sidebar/annotations/cancel": "???",
+				"sidebar/search": "Tìm kiếm",
+				"sidebar/search/placeholder": "???",
+				"sidebar/settings": "Cài đặt",
+				"sidebar/settings/language": "Ngôn ngữ",
+				"sidebar/settings/fontsize": "Cỡ chữ (%)",
+				"sidebar/settings/flow": "???",
+				"sidebar/settings/pagination": ["???", "???"],
+				"sidebar/settings/spread": "???",
+				"sidebar/settings/spread/minwidth": "????",
+				"sidebar/metadata": "Metadata",
+				"sidebar/metadata/title": "Chủ đề",
+				"sidebar/metadata/creator": "Người sáng tạo",
+				"sidebar/metadata/description": "Mô tả",
+				"sidebar/metadata/pubdate": "Ngày tạo",
+				"sidebar/metadata/publisher": "Nhà xuất bản",
+				"sidebar/metadata/identifier": "Định dạng",
+				"sidebar/metadata/language": "Ngôn ngữ",
+				"sidebar/metadata/rights": "Quyền",
+				"sidebar/metadata/modified_date": "Ngày sửa đổi",
+				"sidebar/metadata/layout": "???", // rendition:layout
+				"sidebar/metadata/flow": "???", // rendition:flow
+				"sidebar/metadata/spread": "???", // rendition:spread
+				"sidebar/metadata/direction": "???", // page-progression-direction
+
+				"notedlg/label": "???",
+				"notedlg/add": "???"
 			}
 		};
 
@@ -952,7 +1005,7 @@ class Strings {
 
 	get(key) { return this.values[this.language][key] || "???"; }
 }
-;// ./src/ui.js
+;// CONCATENATED MODULE: ./src/ui.js
 /**
  * @author mrdoob https://github.com/mrdoob/ui.js
  */
@@ -1717,7 +1770,7 @@ class UIBox extends UIElement {
 		this.add(items);
 	}
 }
-;// ./src/toolbar.js
+;// CONCATENATED MODULE: ./src/toolbar.js
 
 
 class Toolbar {
@@ -1735,8 +1788,11 @@ class Toolbar {
 			"toolbar/openbook",
 			"toolbar/openbook/error",
 			"toolbar/bookmark",
-			"toolbar/fullscreen"
+			"toolbar/fullscreen",
+			"toolbar/background"
 		];
+
+		// Toolbar Menu 1
 		const menu1 = new UIDiv().setClass("menu-1");
 		const openerBox = new UIDiv().setId("btn-m").setClass("box");
 		const openerBtn = new UIInput("button");
@@ -1778,7 +1834,25 @@ class Toolbar {
 			menu1.add(nextBox);
 		}
 
+		// Toolbar Menu 2
 		const menu2 = new UIDiv().setClass("menu-2");
+
+		// Button change background
+		let backgroundBox, backgroundBtn;
+		if (settings.background) {
+			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
+			backgroundBtn = new UIInput("color");
+			backgroundBtn.dom.title = strings.get(keys[7]);
+			backgroundBtn.dom.value = "#ffffff";
+			backgroundBtn.dom.onchange = (e) => {
+				const selectedColor = e.target.value;
+				document.body.style.backgroundColor = selectedColor;
+			};
+			backgroundBox.add(backgroundBtn);
+			menu2.add(backgroundBox);
+		}
+
+		// Button open file
 		let openbookBtn;
 		if (settings.openbook) {
 			const onload = (e) => {
@@ -1822,6 +1896,7 @@ class Toolbar {
 			menu2.add(openbookBox);
 		}
 
+		// Button Bookmark
 		let bookmarkBox, bookmarkBtn;
 		if (settings.bookmarks) {
 			bookmarkBox = new UIDiv().setId("btn-b").setClass("box");
@@ -1839,6 +1914,7 @@ class Toolbar {
 			menu2.add(bookmarkBox);
 		}
 
+		// Button Full Screen
 		let fullscreenBtn;
 		if (settings.fullscreen) {
 
@@ -1923,6 +1999,9 @@ class Toolbar {
 			if (settings.fullscreen) {
 				fullscreenBtn.setTitle(strings.get(keys[6]));
 			}
+			if (settings.background) {
+				backgroundBtn.setTitle(strings.get(keys[7]));
+			}
 		});
 	}
 
@@ -1937,7 +2016,7 @@ class Toolbar {
 		}
 	}
 }
-;// ./src/content.js
+;// CONCATENATED MODULE: ./src/content.js
 
 
 class Content {
@@ -2056,7 +2135,7 @@ class Content {
 		});
 	}
 }
-;// ./src/sidebar/toc.js
+;// CONCATENATED MODULE: ./src/sidebar/toc.js
 
 
 class TocPanel extends UIPanel {
@@ -2147,7 +2226,7 @@ class TocPanel extends UIPanel {
 		return list;
 	}
 }
-;// ./src/sidebar/bookmarks.js
+;// CONCATENATED MODULE: ./src/sidebar/bookmarks.js
 
 
 class BookmarksPanel extends UIPanel {
@@ -2284,7 +2363,7 @@ class BookmarksPanel extends UIPanel {
 		this.bookmarks.add(item);
 	}
 }
-;// ./src/sidebar/annotations.js
+;// CONCATENATED MODULE: ./src/sidebar/annotations.js
 
 
 class AnnotationsPanel extends UIPanel {
@@ -2394,7 +2473,7 @@ class AnnotationsPanel extends UIPanel {
 		this.update();
 	}
 }
-;// ./src/sidebar/search.js
+;// CONCATENATED MODULE: ./src/sidebar/search.js
 
 
 class SearchPanel extends UIPanel {
@@ -2469,7 +2548,7 @@ class SearchPanel extends UIPanel {
 		this.items.add(item);
 	}
 }
-;// ./src/sidebar/settings.js
+;// CONCATENATED MODULE: ./src/sidebar/settings.js
 
 
 class SettingsPanel extends UIPanel {
@@ -2497,7 +2576,8 @@ class SettingsPanel extends UIPanel {
 			en: "English",
 			fr: "French",
 			ja: "Japanese",
-			ru: "Russian"
+			ru: "Russian",
+			vi: "Vietnamese"
 		});
 		language.dom.onchange = (e) => {
 
@@ -2516,7 +2596,7 @@ class SettingsPanel extends UIPanel {
 				fontSize: parseInt(e.target.value)
 			});
 		};
-		fontSize.setId("fontsize")
+		fontSize.setId("fontsize");
 		fontSizeRow.add(fontSizeLabel);
 		fontSizeRow.add(fontSize);
 
@@ -2640,7 +2720,7 @@ class SettingsPanel extends UIPanel {
 		});
 	}
 }
-;// ./src/sidebar/metadata.js
+;// CONCATENATED MODULE: ./src/sidebar/metadata.js
 
 
 class MetadataPanel extends UIPanel {
@@ -2706,7 +2786,7 @@ class MetadataPanel extends UIPanel {
 		});
 	}
 }
-;// ./src/sidebar.js
+;// CONCATENATED MODULE: ./src/sidebar.js
 
 
 
@@ -2786,7 +2866,7 @@ class Sidebar {
 		});
 	}
 }
-;// ./src/notedlg.js
+;// CONCATENATED MODULE: ./src/notedlg.js
 
 
 
@@ -2859,7 +2939,7 @@ class NoteDlg {
         });
     }
 }
-;// ./src/reader.js
+;// CONCATENATED MODULE: ./src/reader.js
 
 
 
@@ -3092,7 +3172,8 @@ class Reader {
 				fontSize: 100
 			},
 			pagination: undefined, // not implemented
-			fullscreen: document.fullscreenEnabled
+			fullscreen: document.fullscreenEnabled,
+			background: [],
 		};
 
 		extend(settings || {}, this.settings);
@@ -3166,6 +3247,7 @@ class Reader {
 		delete cfg.openbook;
 		delete cfg.pagination;
 		delete cfg.fullscreen;
+		delete cfg.background;
 		localStorage.setItem(this.entryKey, JSON.stringify(cfg));
 	}
 
