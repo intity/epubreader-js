@@ -12,6 +12,7 @@ export class Strings {
 				"toolbar/openbook/error": "Your browser does not support the required features.\nPlease use a modern browser such as Google Chrome, or Mozilla Firefox.",
 				"toolbar/bookmark": "Add this page to bookmarks",
 				"toolbar/fullscreen": "Fullscreen",
+				"toolbar/background": "Change background",
 
 				"sidebar/close": "Close Sidebar",
 				"sidebar/contents": "Contents",
@@ -60,6 +61,7 @@ export class Strings {
 				"toolbar/openbook/error": "Votre navigateur ne prend pas en charge les fonctions nécessaires.\nVeuillez utiliser un navigateur moderne tel que Google Chrome ou Mozilla Firefox.",
 				"toolbar/bookmark": "Insérer un marque page ici",
 				"toolbar/fullscreen": "Plein écran",
+				"toolbar/background": "Changer l'arrière-plan",
 
 				"sidebar/close": "???",
 				"sidebar/contents": "Sommaire",
@@ -108,6 +110,7 @@ export class Strings {
 				"toolbar/openbook/error": "ご利用のブラウザは必要な機能をサポートしていません。\nGoogle Chrome、Mozilla Firefox、その他のモダンなブラウザでご利用ください。",
 				"toolbar/bookmark": "このページに栞を設定する",
 				"toolbar/fullscreen": "フルスクリーン",
+				"toolbar/background": "背景を変更する",
 
 				"sidebar/close": "???",
 				"sidebar/contents": "目次",
@@ -156,6 +159,7 @@ export class Strings {
 				"toolbar/openbook/error": "Ваш браузер не поддерживает необходимые функции.\nПожалуйста, используйте современный браузер, такой как Google Chrome или Mozilla Firefox.",
 				"toolbar/bookmark": "Добавить эту страницу в закладки",
 				"toolbar/fullscreen": "Полноэкранный режим",
+				"toolbar/background": "изменить фон",
 
 				"sidebar/close": "Закрыть боковую панель",
 				"sidebar/contents": "Содержание",
@@ -195,6 +199,55 @@ export class Strings {
 
 				"notedlg/label": "Заметка",
 				"notedlg/add": "Добавить"
+			},
+			vi: {
+				"toolbar/sidebar": "Thanh bên",
+				"toolbar/prev": "Trang trước",
+				"toolbar/next": "Trang kế tiếp",
+				"toolbar/openbook": "Mở sách",
+				"toolbar/openbook/error": "Trình duyệt của bạn không hỗ trợ các tính năng cần thiết. Vui lòng sử dụng trình duyệt hiện đại như Google Chrome hoặc Mozilla Firefox.",
+				"toolbar/bookmark": "Thêm trang này vào dấu trang",
+				"toolbar/fullscreen": "Toàn màn hình",
+				"toolbar/background": "Đổi màu nền",
+
+				"sidebar/close": "Đóng thanh bên",
+				"sidebar/contents": "Nội dung",
+				"sidebar/bookmarks": "Dấu trang",
+				"sidebar/bookmarks/add": "Thêm dấu trang",
+				"sidebar/bookmarks/remove": "Xóa dấu trang",
+				"sidebar/bookmarks/clear": "???",
+				"sidebar/annotations": "Chú thích",
+				"sidebar/annotations/add": "Thêm chú thích",
+				"sidebar/annotations/remove": "Xóa chú thích",
+				"sidebar/annotations/clear": "???",
+				"sidebar/annotations/anchor": "???",
+				"sidebar/annotations/cancel": "???",
+				"sidebar/search": "Tìm kiếm",
+				"sidebar/search/placeholder": "???",
+				"sidebar/settings": "Cài đặt",
+				"sidebar/settings/language": "Ngôn ngữ",
+				"sidebar/settings/fontsize": "Cỡ chữ (%)",
+				"sidebar/settings/flow": "???",
+				"sidebar/settings/pagination": ["???", "???"],
+				"sidebar/settings/spread": "???",
+				"sidebar/settings/spread/minwidth": "????",
+				"sidebar/metadata": "Metadata",
+				"sidebar/metadata/title": "Chủ đề",
+				"sidebar/metadata/creator": "Người sáng tạo",
+				"sidebar/metadata/description": "Mô tả",
+				"sidebar/metadata/pubdate": "Ngày tạo",
+				"sidebar/metadata/publisher": "Nhà xuất bản",
+				"sidebar/metadata/identifier": "Định dạng",
+				"sidebar/metadata/language": "Ngôn ngữ",
+				"sidebar/metadata/rights": "Quyền",
+				"sidebar/metadata/modified_date": "Ngày sửa đổi",
+				"sidebar/metadata/layout": "???", // rendition:layout
+				"sidebar/metadata/flow": "???", // rendition:flow
+				"sidebar/metadata/spread": "???", // rendition:spread
+				"sidebar/metadata/direction": "???", // page-progression-direction
+
+				"notedlg/label": "???",
+				"notedlg/add": "???"
 			}
 		};
 
