@@ -230,7 +230,8 @@ export class Reader {
 				fontSize: 100
 			},
 			pagination: undefined, // not implemented
-			fullscreen: document.fullscreenEnabled
+			fullscreen: document.fullscreenEnabled,
+			background: [],
 		};
 
 		extend(settings || {}, this.settings);
@@ -304,6 +305,7 @@ export class Reader {
 		delete cfg.openbook;
 		delete cfg.pagination;
 		delete cfg.fullscreen;
+		delete cfg.background;
 		localStorage.setItem(this.entryKey, JSON.stringify(cfg));
 	}
 

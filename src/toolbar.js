@@ -15,8 +15,11 @@ export class Toolbar {
 			"toolbar/openbook",
 			"toolbar/openbook/error",
 			"toolbar/bookmark",
-			"toolbar/fullscreen"
+			"toolbar/fullscreen",
+			"toolbar/background"
 		];
+
+		// Toolbar Menu 1
 		const menu1 = new UIDiv().setClass("menu-1");
 		const openerBox = new UIDiv().setId("btn-m").setClass("box");
 		const openerBtn = new UIInput("button");
@@ -58,7 +61,25 @@ export class Toolbar {
 			menu1.add(nextBox);
 		}
 
+		// Toolbar Menu 2
 		const menu2 = new UIDiv().setClass("menu-2");
+
+		// Button change background
+		let backgroundBox, backgroundBtn;
+		if (settings.background) {
+			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
+			backgroundBtn = new UIInput("color");
+			backgroundBtn.dom.title = strings.get(keys[7]);
+			backgroundBtn.dom.value = "#ffffff";
+			backgroundBtn.dom.onchange = (e) => {
+				const selectedColor = e.target.value;
+				document.body.style.backgroundColor = selectedColor;
+			};
+			backgroundBox.add(backgroundBtn);
+			menu2.add(backgroundBox);
+		}
+
+		// Button open file
 		let openbookBtn;
 		if (settings.openbook) {
 			const onload = (e) => {
@@ -102,6 +123,7 @@ export class Toolbar {
 			menu2.add(openbookBox);
 		}
 
+		// Button Bookmark
 		let bookmarkBox, bookmarkBtn;
 		if (settings.bookmarks) {
 			bookmarkBox = new UIDiv().setId("btn-b").setClass("box");
@@ -119,6 +141,7 @@ export class Toolbar {
 			menu2.add(bookmarkBox);
 		}
 
+		// Button Full Screen
 		let fullscreenBtn;
 		if (settings.fullscreen) {
 
@@ -202,6 +225,9 @@ export class Toolbar {
 			}
 			if (settings.fullscreen) {
 				fullscreenBtn.setTitle(strings.get(keys[6]));
+			}
+			if (settings.background) {
+				backgroundBtn.setTitle(strings.get(keys[7]));
 			}
 		});
 	}
