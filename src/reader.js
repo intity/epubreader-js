@@ -163,7 +163,7 @@ export class Reader {
 		this.on("styleschanged", (value) => {
 			const fontSize = value.fontSize;
 			this.settings.styles.fontSize = fontSize;
-			this.rendition.themes.fontSize(fontSize + "%");
+			this.rendition.themes.fontSize(fontSize + "px");
 		});
 	}
 
@@ -227,7 +227,7 @@ export class Reader {
 				min: 800
 			},
 			styles: {
-				fontSize: 100
+				fontSize: 16
 			},
 			pagination: undefined, // not implemented
 			fullscreen: document.fullscreenEnabled,
@@ -340,7 +340,7 @@ export class Reader {
 
 	keyboardHandler(e) {
 
-		const step = 2;
+		const step = 1;
 		let value = this.settings.styles.fontSize;
 
 		switch (e.key) {

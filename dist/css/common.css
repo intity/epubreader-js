@@ -52,6 +52,38 @@
 	background-image: url("../img/menu.svg");
 }
 
+/* CSS for font-size in toolbar menu-1 */
+#btn-fontsize {
+	display: flex;
+	width: auto !important;
+	align-items: center;
+}
+
+.font-size-px {
+	font-weight: 600;
+	color: #6e6d6d;
+}
+
+.btn-font-decrease {
+	background-image: url("../img/minus-icon.svg");
+}
+
+.btn-font-increase {
+	background-image: url("../img/add-icon.svg");
+}
+
+#btn-fontsize .input-font-size {
+	cursor: text;
+	outline: 1px solid #ccc;
+	border: 1px solid #ccc;
+	margin: 0;
+	width: 100px;
+	padding-left: 10px;
+	font-size: 1rem;
+	font-weight: bold;
+	border-radius: 10px;
+}
+
 #btn-p.box input {
 	background-image: url("../img/prev.svg");
 }
@@ -76,8 +108,13 @@
 	background-image: url("../img/bookmarks.svg");
 }
 
+/* Add style for button change background color */
 #btn-bg.box input {
-	background-image: url("../img/background.svg");
+	background: url(../img/background.svg) no-repeat center / cover;
+}
+
+.btn-change-bg {
+	border-radius: 50%;
 }
 
 #btn-f.box input {

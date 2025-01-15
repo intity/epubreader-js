@@ -1,4 +1,4 @@
-import { UIDiv, UIInput } from "./ui.js";
+import { UIDiv, UIInput, UILabel } from "./ui.js";
 
 export class Toolbar {
 
@@ -33,6 +33,50 @@ export class Toolbar {
 		openerBox.add(openerBtn);
 		menu1.add(openerBox);
 
+		// Button "-", "+" and input for font-size
+		let fontLabel = new UILabel().setClass("font-size-px").setTextContent("Fontsize (px):")
+		let fontSizeBox = new UIDiv().setId("btn-fontsize").setClass("box");
+		let decreaseFontBtn = new UIInput("button").setClass("btn-font-decrease");
+		let increaseFontBtn = new UIInput("button").setClass("btn-font-increase");
+		let fontSizeInput = new UIInput("text").setClass("input-font-size");
+
+		let fontSize = settings.fontSize || 16;
+		fontSizeInput.dom.value = fontSize;
+
+		decreaseFontBtn.dom.textContent = "-";
+		decreaseFontBtn.dom.onclick = () => {
+			fontSize = Math.max(8, fontSize - 1);
+			fontSizeInput.dom.value = fontSize;
+
+			reader.emit("styleschanged", { fontSize: fontSize });
+		};
+
+		increaseFontBtn.dom.textContent = "+";
+		increaseFontBtn.dom.onclick = () => {
+			fontSize = Math.min(72, fontSize + 1);
+			fontSizeInput.dom.value = fontSize;
+
+			reader.emit("styleschanged", { fontSize: fontSize });
+		};
+
+		fontSizeInput.dom.onchange = () => {
+			let newSize = parseInt(fontSizeInput.dom.value, 10);
+			if (!isNaN(newSize) && newSize >= 8 && newSize <= 72) {
+				fontSize = newSize;
+
+				reader.emit("styleschanged", { fontSize: fontSize });
+			} else {
+				fontSizeInput.dom.value = fontSize;
+			}
+		};
+
+		fontSizeBox.add(fontLabel);
+		fontSizeBox.add(decreaseFontBtn);
+		fontSizeBox.add(fontSizeInput);
+		fontSizeBox.add(increaseFontBtn);
+		menu1.add(fontSizeBox);
+
+
 		let prevBox, prevBtn;
 		let nextBox, nextBtn;
 		if (settings.arrows === "toolbar") {
@@ -63,19 +107,48 @@ export class Toolbar {
 
 		// Toolbar Menu 2
 		const menu2 = new UIDiv().setClass("menu-2");
-
 		// Button change background
-		let backgroundBox, backgroundBtn;
+		let backgroundBox, backgroundBtn, colorPicker;
 		if (settings.background) {
 			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
-			backgroundBtn = new UIInput("color");
+
+			backgroundBtn = new UIInput("button").setClass("btn-change-bg");
 			backgroundBtn.dom.title = strings.get(keys[7]);
-			backgroundBtn.dom.value = "#ffffff";
-			backgroundBtn.dom.onchange = (e) => {
-				const selectedColor = e.target.value;
-				document.body.style.backgroundColor = selectedColor;
+			backgroundBtn.dom.value = "";
+			backgroundBtn.dom.textContent = "";
+
+			colorPicker = new UIInput("color");
+			colorPicker.dom.style.display = "none";
+
+			backgroundBtn.dom.onclick = () => {
+				colorPicker.dom.click();
 			};
+
+			document.addEventListener("DOMContentLoaded", () => {
+				const viewer = document.getElementById("viewer");
+				if (viewer) {
+					colorPicker.dom.oninput = (e) => {
+						const selectedColor = e.target.value;
+						viewer.style.backgroundColor = selectedColor;
+					};
+
+					colorPicker.dom.addEventListener("mouseover", (e) => {
+						const selectedColor = e.target.value;
+						if (selectedColor) {
+							viewer.style.backgroundColor = selectedColor;
+						}
+					});
+
+					colorPicker.dom.addEventListener("mouseout", () => {
+						viewer.style.backgroundColor = "";
+					});
+				} else {
+					console.error("Viewer element not found");
+				}
+			});
+
 			backgroundBox.add(backgroundBtn);
+			backgroundBox.add(colorPicker);
 			menu2.add(backgroundBox);
 		}
 

@@ -23,6 +23,10 @@ export class Content {
 		const viewer = new UIDiv().setId("viewer");
 		container.add(viewer);
 
+		reader.on("colorchanged", (color) => {
+			viewer.dom.style.backgroundColor = color;
+		});
+
 		let next;
 		if (settings.arrows === "content") {
 			next = new UIDiv().setId("next").setClass("arrow");

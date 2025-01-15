@@ -20,7 +20,8 @@
         "build": "webpack --mode=production --progress",
         "serve": "webpack serve",
         "minify": "webpack --mode=production --optimization-minimize --progress",
-        "prepare": "npm run build && npm run minify"
+        "prepare": "npm run build && npm run minify",
+        "start": "npm run build && npm run minify && npm run serve"
     },
     "author": "fchasen@gmail.com",
     "license": "MIT",

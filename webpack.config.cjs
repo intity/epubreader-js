@@ -1,5 +1,6 @@
 const path = require("path")
 const CopyPlugin = require("copy-webpack-plugin")
+const { webpack } = require("webpack")
 
 const config = {
 	mode: "development",
@@ -20,10 +21,11 @@ const config = {
 		static: {
 			directory: path.join(__dirname, "dist")
 		},
-		hot: false,
+		hot: true,
 		liveReload: true,
 		compress: true,
-		port: 8088
+		port: 8088,
+		open: true
 	},
 	experiments: {
 		outputModule: true
@@ -73,6 +75,10 @@ module.exports = (env, args) => {
 		config.output.sourceMapFilename = "js/[name].js.map"
 		config.optimization.minimize = false
 	}
+
+	if (env.WEBPACK_SERVE) {
+        config.devServer.hot = true; 
+    }
 
 	return config;
 }

@@ -38,16 +38,22 @@ export class SettingsPanel extends UIPanel {
 
 		const fontSizeLabel = new UILabel(strings.get(keys[2]), "fontsize");
 		const fontSizeRow = new UIRow();
-		const fontSize = new UINumber(100, 1);
-		fontSize.dom.onchange = (e) => {
+		const fontSize = new UINumber(16, 1);
 
-			reader.emit("styleschanged", {
-				fontSize: parseInt(e.target.value)
-			});
+		fontSize.dom.onchange = (e) => {
+			const newSize = parseInt(e.target.value);
+
+			if (newSize >= 8 && newSize <= 72) {
+				reader.emit("styleschanged", {
+					fontSize: newSize
+				});
+			}
 		};
+
 		fontSize.setId("fontsize");
 		fontSizeRow.add(fontSizeLabel);
 		fontSizeRow.add(fontSize);
+		fontSize.dom.disabled = true;
 
 		//-- flow configure --//
 

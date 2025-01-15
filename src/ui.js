@@ -9,10 +9,10 @@ const ERROR_MSG = "is not an instance of UIElement.";
  * @param {string} tag
  */
 export class UIElement {
-	
+
 	constructor(tag) {
 
-		this.dom = document.createElement(tag); 
+		this.dom = document.createElement(tag);
 	}
 
 	add() {
@@ -169,6 +169,16 @@ export class UIDiv extends UIElement {
 	constructor() {
 
 		super("div");
+	}
+
+	setClass(className) {
+		this.dom.className = className;
+		return this;
+	}
+
+	addClass(className) {
+		this.dom.classList.add(className);
+		return this;
 	}
 }
 
@@ -760,5 +770,15 @@ export class UIBox extends UIElement {
 		super("div");
 		this.setClass("box");
 		this.add(items);
+	}
+}
+
+/**
+ * UIButton
+ * @param {UIButton} items
+ */
+export class UIButton extends UIElement {
+	constructor(items) {
+		super("button");
 	}
 }

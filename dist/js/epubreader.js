@@ -1017,10 +1017,10 @@ const ERROR_MSG = "is not an instance of UIElement.";
  * @param {string} tag
  */
 class UIElement {
-	
+
 	constructor(tag) {
 
-		this.dom = document.createElement(tag); 
+		this.dom = document.createElement(tag);
 	}
 
 	add() {
@@ -1177,6 +1177,16 @@ class UIDiv extends UIElement {
 	constructor() {
 
 		super("div");
+	}
+
+	setClass(className) {
+		this.dom.className = className;
+		return this;
+	}
+
+	addClass(className) {
+		this.dom.classList.add(className);
+		return this;
 	}
 }
 
@@ -1770,6 +1780,16 @@ class UIBox extends UIElement {
 		this.add(items);
 	}
 }
+
+/**
+ * UIButton
+ * @param {UIButton} items
+ */
+class UIButton extends UIElement {
+	constructor(items) {
+		super("button");
+	}
+}
 ;// CONCATENATED MODULE: ./src/toolbar.js
 
 
@@ -1806,6 +1826,50 @@ class Toolbar {
 		openerBox.add(openerBtn);
 		menu1.add(openerBox);
 
+		// Button "-", "+" and input for font-size
+		let fontLabel = new UILabel().setClass("font-size-px").setTextContent("Fontsize (px):")
+		let fontSizeBox = new UIDiv().setId("btn-fontsize").setClass("box");
+		let decreaseFontBtn = new UIInput("button").setClass("btn-font-decrease");
+		let increaseFontBtn = new UIInput("button").setClass("btn-font-increase");
+		let fontSizeInput = new UIInput("text").setClass("input-font-size");
+
+		let fontSize = settings.fontSize || 16;
+		fontSizeInput.dom.value = fontSize;
+
+		decreaseFontBtn.dom.textContent = "-";
+		decreaseFontBtn.dom.onclick = () => {
+			fontSize = Math.max(8, fontSize - 1);
+			fontSizeInput.dom.value = fontSize;
+
+			reader.emit("styleschanged", { fontSize: fontSize });
+		};
+
+		increaseFontBtn.dom.textContent = "+";
+		increaseFontBtn.dom.onclick = () => {
+			fontSize = Math.min(72, fontSize + 1);
+			fontSizeInput.dom.value = fontSize;
+
+			reader.emit("styleschanged", { fontSize: fontSize });
+		};
+
+		fontSizeInput.dom.onchange = () => {
+			let newSize = parseInt(fontSizeInput.dom.value, 10);
+			if (!isNaN(newSize) && newSize >= 8 && newSize <= 72) {
+				fontSize = newSize;
+
+				reader.emit("styleschanged", { fontSize: fontSize });
+			} else {
+				fontSizeInput.dom.value = fontSize;
+			}
+		};
+
+		fontSizeBox.add(fontLabel);
+		fontSizeBox.add(decreaseFontBtn);
+		fontSizeBox.add(fontSizeInput);
+		fontSizeBox.add(increaseFontBtn);
+		menu1.add(fontSizeBox);
+
+
 		let prevBox, prevBtn;
 		let nextBox, nextBtn;
 		if (settings.arrows === "toolbar") {
@@ -1836,19 +1900,48 @@ class Toolbar {
 
 		// Toolbar Menu 2
 		const menu2 = new UIDiv().setClass("menu-2");
-
 		// Button change background
-		let backgroundBox, backgroundBtn;
+		let backgroundBox, backgroundBtn, colorPicker;
 		if (settings.background) {
 			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
-			backgroundBtn = new UIInput("color");
+
+			backgroundBtn = new UIInput("button").setClass("btn-change-bg");
 			backgroundBtn.dom.title = strings.get(keys[7]);
-			backgroundBtn.dom.value = "#ffffff";
-			backgroundBtn.dom.onchange = (e) => {
-				const selectedColor = e.target.value;
-				document.body.style.backgroundColor = selectedColor;
+			backgroundBtn.dom.value = "";
+			backgroundBtn.dom.textContent = "";
+
+			colorPicker = new UIInput("color");
+			colorPicker.dom.style.display = "none";
+
+			backgroundBtn.dom.onclick = () => {
+				colorPicker.dom.click();
 			};
+
+			document.addEventListener("DOMContentLoaded", () => {
+				const viewer = document.getElementById("viewer");
+				if (viewer) {
+					colorPicker.dom.oninput = (e) => {
+						const selectedColor = e.target.value;
+						viewer.style.backgroundColor = selectedColor;
+					};
+
+					colorPicker.dom.addEventListener("mouseover", (e) => {
+						const selectedColor = e.target.value;
+						if (selectedColor) {
+							viewer.style.backgroundColor = selectedColor;
+						}
+					});
+
+					colorPicker.dom.addEventListener("mouseout", () => {
+						viewer.style.backgroundColor = "";
+					});
+				} else {
+					console.error("Viewer element not found");
+				}
+			});
+
 			backgroundBox.add(backgroundBtn);
+			backgroundBox.add(colorPicker);
 			menu2.add(backgroundBox);
 		}
 
@@ -2041,6 +2134,10 @@ class Content {
 
 		const viewer = new UIDiv().setId("viewer");
 		container.add(viewer);
+
+		reader.on("colorchanged", (color) => {
+			viewer.dom.style.backgroundColor = color;
+		});
 
 		let next;
 		if (settings.arrows === "content") {
@@ -2589,16 +2686,22 @@ class SettingsPanel extends UIPanel {
 
 		const fontSizeLabel = new UILabel(strings.get(keys[2]), "fontsize");
 		const fontSizeRow = new UIRow();
-		const fontSize = new UINumber(100, 1);
-		fontSize.dom.onchange = (e) => {
+		const fontSize = new UINumber(16, 1);
 
-			reader.emit("styleschanged", {
-				fontSize: parseInt(e.target.value)
-			});
+		fontSize.dom.onchange = (e) => {
+			const newSize = parseInt(e.target.value);
+
+			if (newSize >= 8 && newSize <= 72) {
+				reader.emit("styleschanged", {
+					fontSize: newSize
+				});
+			}
 		};
+
 		fontSize.setId("fontsize");
 		fontSizeRow.add(fontSizeLabel);
 		fontSizeRow.add(fontSize);
+		fontSize.dom.disabled = true;
 
 		//-- flow configure --//
 
@@ -3105,7 +3208,7 @@ class Reader {
 		this.on("styleschanged", (value) => {
 			const fontSize = value.fontSize;
 			this.settings.styles.fontSize = fontSize;
-			this.rendition.themes.fontSize(fontSize + "%");
+			this.rendition.themes.fontSize(fontSize + "px");
 		});
 	}
 
@@ -3169,7 +3272,7 @@ class Reader {
 				min: 800
 			},
 			styles: {
-				fontSize: 100
+				fontSize: 16
 			},
 			pagination: undefined, // not implemented
 			fullscreen: document.fullscreenEnabled,
@@ -3282,7 +3385,7 @@ class Reader {
 
 	keyboardHandler(e) {
 
-		const step = 2;
+		const step = 1;
 		let value = this.settings.styles.fontSize;
 
 		switch (e.key) {
