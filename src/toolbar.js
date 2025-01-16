@@ -16,10 +16,10 @@ export class Toolbar {
 			"toolbar/openbook/error",
 			"toolbar/bookmark",
 			"toolbar/fullscreen",
-			"toolbar/background"
+			"toolbar/background",
 		];
 
-		// Toolbar Menu 1
+		/*------------------------ Toolbar Menu 1 --------------------------*/
 		const menu1 = new UIDiv().setClass("menu-1");
 		const openerBox = new UIDiv().setId("btn-m").setClass("box");
 		const openerBtn = new UIInput("button");
@@ -105,49 +105,24 @@ export class Toolbar {
 			menu1.add(nextBox);
 		}
 
-		// Toolbar Menu 2
+		/*------------------------ Toolbar Menu 2 --------------------------*/
 		const menu2 = new UIDiv().setClass("menu-2");
 		// Button change background
-		let backgroundBox, backgroundBtn, colorPicker;
+		let backgroundBox, colorPicker;
 		if (settings.background) {
+			// Init elements: background box div, input color picker
 			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
+			colorPicker = new UIInput("color").setClass("color-picker");
+			colorPicker.dom.title = strings.get(keys[7]);
 
-			backgroundBtn = new UIInput("button").setClass("btn-change-bg");
-			backgroundBtn.dom.title = strings.get(keys[7]);
-			backgroundBtn.dom.value = "";
-			backgroundBtn.dom.textContent = "";
+			// Handle event get color from color table of input color
+			colorPicker.dom.oninput = (e) => {
+				const selectedColor = e.target.value;
 
-			colorPicker = new UIInput("color");
-			colorPicker.dom.style.display = "none";
+				// Emit 'colorchanged' event with selected color
+				reader.emit("colorchanged", selectedColor);
+			}
 
-			backgroundBtn.dom.onclick = () => {
-				colorPicker.dom.click();
-			};
-
-			document.addEventListener("DOMContentLoaded", () => {
-				const viewer = document.getElementById("viewer");
-				if (viewer) {
-					colorPicker.dom.oninput = (e) => {
-						const selectedColor = e.target.value;
-						viewer.style.backgroundColor = selectedColor;
-					};
-
-					colorPicker.dom.addEventListener("mouseover", (e) => {
-						const selectedColor = e.target.value;
-						if (selectedColor) {
-							viewer.style.backgroundColor = selectedColor;
-						}
-					});
-
-					colorPicker.dom.addEventListener("mouseout", () => {
-						viewer.style.backgroundColor = "";
-					});
-				} else {
-					console.error("Viewer element not found");
-				}
-			});
-
-			backgroundBox.add(backgroundBtn);
 			backgroundBox.add(colorPicker);
 			menu2.add(backgroundBox);
 		}
@@ -302,6 +277,7 @@ export class Toolbar {
 			if (settings.background) {
 				backgroundBtn.setTitle(strings.get(keys[7]));
 			}
+			
 		});
 	}
 

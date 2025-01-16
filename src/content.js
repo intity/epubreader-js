@@ -23,6 +23,7 @@ export class Content {
 		const viewer = new UIDiv().setId("viewer");
 		container.add(viewer);
 
+		// Handle the 'colorchanged' event to change background of 'viewer'
 		reader.on("colorchanged", (color) => {
 			viewer.dom.style.backgroundColor = color;
 		});
@@ -73,7 +74,7 @@ export class Content {
 		});
 
 		reader.on("flowchanged", (value) => {
-			
+
 			viewer.setClass(value);
 		});
 

@@ -57,6 +57,7 @@
 	display: flex;
 	width: auto !important;
 	align-items: center;
+	margin-left: 10px;
 }
 
 .font-size-px {
@@ -77,8 +78,8 @@
 	outline: 1px solid #ccc;
 	border: 1px solid #ccc;
 	margin: 0;
-	width: 100px;
-	padding-left: 10px;
+	width: 30px;
+	padding: 0 10px;
 	font-size: 1rem;
 	font-weight: bold;
 	border-radius: 10px;
@@ -109,12 +110,13 @@
 }
 
 /* Add style for button change background color */
-#btn-bg.box input {
-	background: url(../img/background.svg) no-repeat center / cover;
-}
+#btn-bg {}
 
-.btn-change-bg {
-	border-radius: 50%;
+#btn-bg .color-picker {
+	outline: none;
+	border: 2px solid #000;
+	border-radius: 5px;
+	padding: 0px;
 }
 
 #btn-f.box input {

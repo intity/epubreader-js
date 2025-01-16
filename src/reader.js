@@ -227,11 +227,11 @@ export class Reader {
 				min: 800
 			},
 			styles: {
-				fontSize: 16
+				fontSize: 16	// Default fontsize by 'px'
 			},
 			pagination: undefined, // not implemented
 			fullscreen: document.fullscreenEnabled,
-			background: [],
+			background: [],	// Setting for change background "viewer"
 		};
 
 		extend(settings || {}, this.settings);
