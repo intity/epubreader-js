@@ -7,21 +7,27 @@
 	position: relative;
 }
 
+/* Add linear-gradient background for toolbar */
+#toolbar {
+	background: linear-gradient(277deg, #FFC01F 0%, #FFF38C 135.52%);
+	grid-template-columns: repeat(3, 1fr);
+}
+
 #toolbar .menu-1 {
 	display: flex;
-	grid-column: 1;
+	/* grid-column: 1; */
 	justify-content: left;
 }
 
 #toolbar .menu-2 {
 	display: flex;
-	grid-column: 2;
+	/* grid-column: 2; */
 	justify-content: right;
 }
 
 #toolbar .box {
 	width: 58px;
-	height: 36px;
+	/* height: 36px; */
 }
 
 #toolbar #btn-p.box,
@@ -29,11 +35,67 @@
 	display: none;
 }
 
+.menu-1 #btn-logo {
+	padding: 0 20px;
+}
+
+.menu-1 #btn-logo::after {
+	content: "";
+	position: absolute;
+	border: 1px solid white;
+	height: 35px;
+	border-radius: 2px;
+	transform: translate(20px, 10px);
+}
+
+.menu-1 #btn-logo #logo-link {
+	text-decoration: none;
+	color: #fff;
+	font-family: Be Vietnam Pro, sans-serif;
+	padding: 10px 20px;
+	background: black;
+	line-height: 58px;
+}
+
+/* Hide the menu icon in menu-1 on toolbar */
+.menu-1 #btn-m {
+	/* display: none; */
+}
+
+/* Hide the fullscreen button in menu-2 on toolbar */
+.menu-2 #btn-f {
+	display: none;
+}
+
+/* Hide the import epub file button in menu-2 on toolbar */
+.menu-2 #btn-o {
+	display: none;
+}
+
+
+/* Style for center Current Page of Total Page */
+.menu-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.toolbar-center-label {
+	font-weight: 600;
+}
+
+.page-map {
+	color: #444241;
+	font-size: 12px;
+	font-weight: 500;
+	font-family: Be Vietnam Pro, sans-serif;
+}
+
 /**
  * iPhone 5 : 320 x 568
  */
-@media
-only screen and (width: 320px) and (orientation: portrait),
+@media only screen and (width: 320px) and (orientation: portrait),
 only screen and (height: 320px) and (orientation: landscape) {
 	#toolbar {
 		height: 52px;

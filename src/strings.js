@@ -51,7 +51,10 @@ export class Strings {
 				"sidebar/metadata/direction": "Direction", // page-progression-direction
 
 				"notedlg/label": "Note",
-				"notedlg/add": "Add"
+				"notedlg/add": "Add",
+
+				"status/fullscreen": "Fullscreen",
+				"status/": "",
 			},
 			fr: {
 				"toolbar/sidebar": "Barre latérale",
@@ -100,7 +103,10 @@ export class Strings {
 				"sidebar/metadata/direction": "???",
 
 				"notedlg/label": "???",
-				"notedlg/add": "Ajouter"
+				"notedlg/add": "Ajouter",
+
+				"status/fullscreen": "",
+				"status/": "",
 			},
 			ja: {
 				"toolbar/sidebar": "サイドバー",
@@ -149,7 +155,10 @@ export class Strings {
 				"sidebar/metadata/direction": "???",
 
 				"notedlg/label": "???",
-				"notedlg/add": "追加"
+				"notedlg/add": "追加",
+
+				"status/fullscreen": "",
+				"status/": "",
 			},
 			ru: {
 				"toolbar/sidebar": "Боковая панель",
@@ -198,7 +207,10 @@ export class Strings {
 				"sidebar/metadata/direction": "Направление",
 
 				"notedlg/label": "Заметка",
-				"notedlg/add": "Добавить"
+				"notedlg/add": "Добавить",
+
+				"status/fullscreen": "",
+				"status/": "",
 			},
 			vi: {
 				"toolbar/sidebar": "Thanh bên",
@@ -247,7 +259,10 @@ export class Strings {
 				"sidebar/metadata/direction": "???", // page-progression-direction
 
 				"notedlg/label": "???",
-				"notedlg/add": "???"
+				"notedlg/add": "???",
+
+				"status/fullscreen": "Toàn màn hình",
+				"status/": "",
 			}
 		};
 

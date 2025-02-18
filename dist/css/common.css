@@ -30,6 +30,7 @@
 	background-position: center;
 }
 
+[id^="btn-"].box input.active,
 [id^="btn-"].box input:hover {
 	opacity: 0.7;
 	background-color: #F2F3F4;
@@ -63,14 +64,17 @@
 .font-size-px {
 	font-weight: 600;
 	color: #6e6d6d;
+	display: none;
 }
 
 .btn-font-decrease {
-	background-image: url("../img/minus-icon.svg");
+	background-image: url("../img/text-down.svg");
+	opacity: 0.8 !important;
 }
 
 .btn-font-increase {
-	background-image: url("../img/add-icon.svg");
+	background-image: url("../img/text-up.svg");
+	opacity: 0.8 !important;
 }
 
 #btn-fontsize .input-font-size {
@@ -83,6 +87,11 @@
 	font-size: 1rem;
 	font-weight: bold;
 	border-radius: 10px;
+}
+
+/* Hide the input that show font-size text */
+#btn-fontsize .input-font-size {
+	display: none;
 }
 
 #btn-p.box input {
@@ -99,6 +108,7 @@
 
 #btn-b.box input {
 	background-image: url("../img/bookmark.svg");
+	opacity: 0.8;
 }
 
 #btn-b.box.bookmarked input {
@@ -106,11 +116,29 @@
 }
 
 #btn-d.box input {
-	background-image: url("../img/bookmarks.svg");
+	background-image: url("../img/bookmarks03.svg");
+	opacity: 0.8;
 }
 
-/* Add style for button change background color */
-#btn-bg {}
+#btn-close.box input {
+	background-image: url("../img/close.svg");
+	opacity: 0.8;
+}
+
+#btn-close::before {
+	content: "";
+	position: absolute;
+	border: 1px solid white;
+	height: 35px;
+	border-radius: 2px;
+	/* transform: translate(0px, 0px); */
+}
+
+/*----------------- Add style for button change background color ----------------*/
+/* Hide the background-changing button */
+#btn-bg {
+	display: none;
+}
 
 #btn-bg .color-picker {
 	outline: none;
@@ -128,15 +156,18 @@
 }
 
 #btn-t.box input {
-	background-image: url("../img/toc.svg");
+	background-image: url("../img/list-view-circle.svg");
+	opacity: 0.8;
 }
 
 #btn-a.box input {
-	background-image: url("../img/annotations.svg");
+	background-image: url("../img/highlight-note.svg");
+	opacity: 0.8;
 }
 
 #btn-s.box input {
-	background-image: url("../img/search.svg");
+	background-image: url("../img/search-02.svg");
+	opacity: 0.8;
 }
 
 #btn-c.box input {
@@ -145,6 +176,10 @@
 
 #btn-i.box input {
 	background-image: url("../img/info.svg");
+}
+
+#btn-ar.box input {
+	background-image: url("../img/apps-rectangle.svg");
 }
 
 /**

@@ -7,6 +7,7 @@ import { Toolbar } from "./toolbar.js";
 import { Content } from "./content.js";
 import { Sidebar } from "./sidebar.js";
 import { NoteDlg } from "./notedlg.js";
+import { Status } from "./status.js";
 
 export class Reader {
 
@@ -25,6 +26,7 @@ export class Reader {
 			this.strings = new Strings(this);
 			this.toolbar = new Toolbar(this);
 			this.content = new Content(this);
+			this.status = new Status(this);
 			this.sidebar = new Sidebar(this);
 			if (this.settings.annotations) {
 				this.notedlg = new NoteDlg(this);
@@ -355,7 +357,7 @@ export class Reader {
 				this.emit("styleschanged", { fontSize: value });
 				break;
 			case "0":
-				value = 100;
+				value = 16;
 				this.emit("styleschanged", { fontSize: value });
 				break;
 			case "ArrowLeft":

@@ -83,6 +83,29 @@ export class AnnotationsPanel extends UIPanel {
 		this.reader.rendition.annotations.add(
 			"highlight", note.cfi, {}, call, "note-highlight", {});
 		this.update();
+
+		const toolbarList = document.getElementById("toolbar-annotations-list");
+		if (toolbarList) {
+			const toolbarNoteItem = document.createElement("li");
+			const toolbarNoteLink = document.createElement("a");
+			toolbarNoteLink.href = "#";
+			toolbarNoteLink.textContent = note.text; // sửa lại nếu cần
+			toolbarNoteLink.onclick = (e) => {
+				e.preventDefault();
+				this.reader.rendition.display(note.cfi);
+			};
+			toolbarNoteItem.appendChild(toolbarNoteLink);
+
+			const deleteBtn = document.createElement("span");
+			deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+
+			deleteBtn.onclick = (e) => {
+				e.stopPropagation();
+				this.reader.removeNoteFromToolbar(note);
+			}
+			toolbarNoteItem.appendChild(deleteBtn);
+			toolbarList.appendChild(toolbarNoteItem);
+		}
 	}
 
 	removeNote(note) {
@@ -95,6 +118,16 @@ export class AnnotationsPanel extends UIPanel {
 		this.reader.settings.annotations.splice(index, 1);
 		this.reader.rendition.annotations.remove(note.cfi, "highlight");
 		this.update();
+
+		const toolbarList = document.getElementById("toolbar-annotations-list");
+		if (toolbarList) {
+			const toolbarItems = toolbarList.querySelectorAll("li");
+			toolbarItems.forEach(item => {
+				if (item.querySelector("a").textContent === note.text) {
+					item.remove();
+				}
+			})
+		}
 	}
 
 	clearNotes() {

@@ -1,4 +1,4 @@
-import { UIDiv, UIInput, UILabel } from "./ui.js";
+import { UIButton, UIDiv, UIInput, UILabel, UILink, UISpan, UIText } from "./ui.js";
 
 export class Toolbar {
 
@@ -17,6 +17,8 @@ export class Toolbar {
 			"toolbar/bookmark",
 			"toolbar/fullscreen",
 			"toolbar/background",
+			"toolbar/search",
+			"toolbar/close",
 		];
 
 		/*------------------------ Toolbar Menu 1 --------------------------*/
@@ -33,7 +35,332 @@ export class Toolbar {
 		openerBox.add(openerBtn);
 		menu1.add(openerBox);
 
-		// Button "-", "+" and input for font-size
+		let prevBox, prevBtn;
+		let nextBox, nextBtn;
+		if (settings.arrows === "toolbar") {
+			prevBox = new UIDiv().setId("btn-p").setClass("box");
+			prevBtn = new UIInput("button");
+			prevBtn.setTitle(strings.get(keys[1]));
+			prevBtn.dom.onclick = (e) => {
+
+				reader.emit("prev");
+				e.preventDefault();
+				prevBtn.dom.blur();
+			};
+			prevBox.add(prevBtn);
+			menu1.add(prevBox);
+
+			nextBox = new UIDiv().setId("btn-n").setClass("box");
+			nextBtn = new UIInput("button");
+			nextBtn.dom.title = strings.get(keys[2]);
+			nextBtn.dom.onclick = (e) => {
+
+				reader.emit("next");
+				e.preventDefault();
+				nextBtn.dom.blur();
+			};
+			nextBox.add(nextBtn);
+			menu1.add(nextBox);
+		}
+
+		/* ------------------------ Button Logo ------------------------- */
+		const logoBox = new UIDiv().setId("btn-logo").setClass("logo");
+		const logoLink = new UILink().setId("logo-link").setHref("#").setTextContent("LOGO");
+
+		logoBox.add(logoLink);
+		menu1.add(logoBox);
+
+		/* ------------------------ Button Index List (muc luc) -------------------------- */
+		let tocBox, tocBtn;
+		tocBox = new UIDiv().setId("btn-t").setClass("box");
+		tocBtn = new UIInput("button");
+
+		// load toc content title for toc list
+		tocBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			reader.book.loaded.navigation.then((toc) => {
+				showToc(toc);
+			})
+		}
+
+		tocBox.add(tocBtn);
+		menu1.add(tocBox);
+
+		// Function to show the toc list
+		function showToc(toc) {
+			let existingToc = document.getElementById("toolbar-toc-list");
+
+			if (!existingToc) {
+				let tocList = document.createElement("ul");
+				tocList.setAttribute("id", "toolbar-toc-list");
+
+				let tocTitle = document.createElement("h3");
+				tocTitle.textContent = "Mục lục";
+
+				tocList.appendChild(tocTitle);
+
+				toc.forEach((chapter) => {
+					let tocItem = document.createElement("li");
+					let tocLink = document.createElement("a");
+
+					tocLink.href = "#";
+					tocLink.textContent = chapter.label;
+
+					tocLink.onclick = (e) => {
+						e.preventDefault();
+
+						document.querySelectorAll("#toolbar-toc-list li a").forEach((link) => {
+							link.classList.remove("active");
+						})
+
+						tocLink.classList.add("active");
+
+						// show the chapter with the title chosed in toc list
+						reader.rendition.display(chapter.href);
+					};
+
+					tocItem.appendChild(tocLink);
+					tocList.appendChild(tocItem);
+				});
+
+				tocBox.dom.appendChild(tocList);
+			}
+
+			let tocList = document.getElementById("toolbar-toc-list");
+			tocList.classList.toggle("active");
+		}
+
+
+
+		/* ------------------------ Button My Bookmark (bookmark cua toi) --------------------------*/
+		let bookmarksBox, bookmarksBtn;
+		bookmarksBox = new UIDiv().setId("btn-d").setClass("box");
+		bookmarksBtn = new UIInput("button");
+
+		bookmarksBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			showBookmarks();
+		}
+
+		bookmarksBox.add(bookmarksBtn);
+		menu1.add(bookmarksBox);
+
+		function showBookmarks() {
+			let existingList = document.getElementById("toolbar-bookmarks-list");
+
+			if (!existingList) {
+				let bookmarksList = document.createElement("ul");
+				bookmarksList.setAttribute("id", "toolbar-bookmarks-list");
+
+				let title = document.createElement("h3");
+				title.textContent = "Bookmarks của tui";
+
+				bookmarksList.appendChild(title);
+
+				reader.settings.bookmarks.forEach((cfi) => {
+					let bookmarkItem = document.createElement("li");
+					let bookmarkLink = document.createElement("a");
+					let deleteBtn = document.createElement("span");
+
+					bookmarkLink.href = "#";
+					bookmarkLink.textContent = `Bookmark ${bookmarksList.children.length}`;
+
+					bookmarkLink.onclick = (e) => {
+						e.preventDefault();
+
+						document.querySelectorAll("#toolbar-bookmarks-list li a").forEach((link) => {
+							link.classList.remove("active");
+						})
+
+						bookmarkLink.classList.add("active");
+
+						reader.rendition.display(cfi);
+					}
+
+					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+
+					deleteBtn.onclick = (e) => {
+						e.stopPropagation();
+						reader.removeBookmarkFromToolbar(cfi);
+					}
+
+					bookmarkItem.appendChild(bookmarkLink);
+					bookmarkItem.appendChild(deleteBtn);
+					bookmarksList.appendChild(bookmarkItem);
+				})
+
+				bookmarkBox.dom.appendChild(bookmarksList);
+			}
+
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+			bookmarksList.classList.toggle("active");
+		}
+
+		// Hàm xóa bookmark từ toolbar
+		reader.removeBookmarkFromToolbar = function (cfi) {
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+			if (!bookmarksList) return;
+
+			let bookmarkItems = bookmarksList.querySelectorAll("li");
+			let targetItem = Array.from(bookmarkItems).find(item => {
+				return item.querySelector("a").textContent.includes(cfi);
+			});
+
+			if (targetItem) {
+				targetItem.remove();
+			}
+
+			const index = reader.settings.bookmarks.indexOf(cfi);
+			if (index !== -1) {
+				reader.settings.bookmarks.splice(index, 1);
+			}
+
+			reader.emit("bookmarked", false, cfi);
+		};
+
+
+
+		/* ------------------------ Button Highlight And Note ---------------------------- */
+		let annotationsBox, annotationsBtn;
+		annotationsBox = new UIDiv().setId("btn-a").setClass("box");
+		annotationsBtn = new UIInput("button");
+
+		// show annotations list when click icon on toolbar
+		annotationsBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			showAnnotations();
+		}
+
+		annotationsBox.add(annotationsBtn);
+		menu1.add(annotationsBox);
+
+		// Function to show the annotations list
+		function showAnnotations() {
+			let existingList = document.getElementById("toolbar-annotations-list");
+
+			if (!existingList) {
+				let annotationsList = document.createElement("ul");
+				annotationsList.setAttribute("id", "toolbar-annotations-list");
+
+				let title = document.createElement("h3");
+				title.textContent = "Highlights & Ghi chú";
+
+				annotationsList.appendChild(title);
+
+				reader.settings.annotations.forEach((note) => {
+					let noteItem = document.createElement("li");
+					let noteLink = document.createElement("a");
+					let deleteBtn = document.createElement("span");
+
+					noteLink.href = "#";
+					noteLink.textContent = note.text;
+
+					noteLink.onclick = (e) => {
+						e.preventDefault();
+
+						document.querySelectorAll("#toolbar-annotations-list li a").forEach((link) => {
+							link.classList.remove("active");
+						})
+
+						noteLink.classList.add("active");
+
+						reader.rendition.display(note.cfi);
+					}
+
+					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+
+					// emit event to delete annotation items
+					deleteBtn.onclick = (e) => {
+						e.stopPropagation();
+						reader.removeNoteFromToolbar(note);
+					}
+
+					noteItem.appendChild(noteLink);
+					noteItem.appendChild(deleteBtn);
+					annotationsList.appendChild(noteItem);
+				})
+
+				annotationsBox.dom.appendChild(annotationsList);
+			}
+
+			let annotationsList = document.getElementById("toolbar-annotations-list");
+			annotationsList.classList.toggle("active");
+		}
+
+		reader.removeNoteFromToolbar = function (note) {
+			let annotationsList = document.getElementById("toolbar-annotations-list");
+			if (!annotationsList) return;
+
+			let noteItems = annotationsList.querySelectorAll("li");
+			let targetItem = Array.from(noteItems).find(item => {
+				item.querySelector('a').textContent === note.text;
+			})
+
+			if (targetItem) {
+				targetItem.remove();
+			}
+
+			const annotationsPanel = reader.annotationsPanel;
+			if (annotationsPanel) {
+				annotationsPanel.removeNote(note);
+				annotationsPanel.update();
+			}
+
+			const index = reader.settings.annotations.findIndex((n) => n.cfi === note.cfi);
+			if (index !== -1) {
+				reader.settings.annotations.splice(index, 1);
+			}
+
+			reader.rendition.annotations.remove(note.cfi, "highlight");
+		}
+
+
+
+
+		/* ----------------------------- Current Page -------------------------------- */
+		const centerPageCount = new UIDiv().setClass("menu-center");
+
+		const centerLabel = new UILabel().setClass("toolbar-center-label");
+		centerLabel.setTextContent("Determined");
+
+		const curOfTotal = new UIDiv().setClass("page-map");
+		const curPageIndex = new UISpan().setClass("current-page-index").setTextContent("1");
+		const separator = new UIText().setTextContent(" của ");
+		const totalPage = new UISpan().setClass("total-pages").setTextContent("200");
+
+		curOfTotal.add(curPageIndex);
+		curOfTotal.add(separator);
+		curOfTotal.add(totalPage);
+
+		centerPageCount.add(centerLabel);
+		centerPageCount.add(curOfTotal);
+
+
+
+		/*------------------------ Toolbar Menu 2 --------------------------*/
+		const menu2 = new UIDiv().setClass("menu-2");
+		// Button change background
+		let backgroundBox, colorPicker;
+		if (settings.background) {
+			// Init elements: background box div, input color picker
+			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
+			colorPicker = new UIInput("color").setClass("color-picker");
+			colorPicker.dom.title = strings.get(keys[7]);
+
+			// Handle event get color from color table of input color
+			colorPicker.dom.oninput = (e) => {
+				const selectedColor = e.target.value;
+
+				// Emit 'colorchanged' event with selected color
+				reader.emit("colorchanged", selectedColor);
+			}
+
+			backgroundBox.add(colorPicker);
+			menu2.add(backgroundBox);
+		}
+
+
+		// Button "A-", "A+" and input (hidden) for font-size
 		let fontLabel = new UILabel().setClass("font-size-px").setTextContent("Fontsize (px):")
 		let fontSizeBox = new UIDiv().setId("btn-fontsize").setClass("box");
 		let decreaseFontBtn = new UIInput("button").setClass("btn-font-decrease");
@@ -74,58 +401,8 @@ export class Toolbar {
 		fontSizeBox.add(decreaseFontBtn);
 		fontSizeBox.add(fontSizeInput);
 		fontSizeBox.add(increaseFontBtn);
-		menu1.add(fontSizeBox);
+		menu2.add(fontSizeBox);
 
-
-		let prevBox, prevBtn;
-		let nextBox, nextBtn;
-		if (settings.arrows === "toolbar") {
-			prevBox = new UIDiv().setId("btn-p").setClass("box");
-			prevBtn = new UIInput("button");
-			prevBtn.setTitle(strings.get(keys[1]));
-			prevBtn.dom.onclick = (e) => {
-
-				reader.emit("prev");
-				e.preventDefault();
-				prevBtn.dom.blur();
-			};
-			prevBox.add(prevBtn);
-			menu1.add(prevBox);
-
-			nextBox = new UIDiv().setId("btn-n").setClass("box");
-			nextBtn = new UIInput("button");
-			nextBtn.dom.title = strings.get(keys[2]);
-			nextBtn.dom.onclick = (e) => {
-
-				reader.emit("next");
-				e.preventDefault();
-				nextBtn.dom.blur();
-			};
-			nextBox.add(nextBtn);
-			menu1.add(nextBox);
-		}
-
-		/*------------------------ Toolbar Menu 2 --------------------------*/
-		const menu2 = new UIDiv().setClass("menu-2");
-		// Button change background
-		let backgroundBox, colorPicker;
-		if (settings.background) {
-			// Init elements: background box div, input color picker
-			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
-			colorPicker = new UIInput("color").setClass("color-picker");
-			colorPicker.dom.title = strings.get(keys[7]);
-
-			// Handle event get color from color table of input color
-			colorPicker.dom.oninput = (e) => {
-				const selectedColor = e.target.value;
-
-				// Emit 'colorchanged' event with selected color
-				reader.emit("colorchanged", selectedColor);
-			}
-
-			backgroundBox.add(colorPicker);
-			menu2.add(backgroundBox);
-		}
 
 		// Button open file
 		let openbookBtn;
@@ -169,6 +446,33 @@ export class Toolbar {
 			};
 			openbookBox.add(openbookBtn);
 			menu2.add(openbookBox);
+		}
+
+
+		// Button search 
+		let searchBox, searchBtn;
+		let searchInput, searchResults;
+		searchBox = new UIDiv().setId("btn-s").setClass("box");
+		searchBtn = new UIInput("button");
+		searchBtn.setTitle(strings.get(keys[8]));
+
+		searchBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			showSearchPopup();
+		}
+
+		searchBox.add(searchBtn);
+		menu2.add(searchBox);
+
+		function showSearchPopup() {
+			let existingPopup = document.getElementById("toolbar-search-list");
+			if (!existingPopup) {
+				let searchPopup = document.createElement("div");
+				searchPopup.setAttribute("id", "toolbar-search-list");
+				searchPopup.classList.add("search-popup");
+
+				
+			}
 		}
 
 		// Button Bookmark
@@ -225,8 +529,20 @@ export class Toolbar {
 			menu2.add(fullscreenBox);
 		}
 
-		container.add([menu1, menu2]);
+		container.add([menu1, centerPageCount, menu2]);
 		document.body.appendChild(container.dom);
+
+		// Button Close
+		let closeBox, closeBtn;
+		closeBox = new UIDiv().setId("btn-close").setClass("box");
+		closeBtn = new UIInput("button").setClass("active");
+		closeBtn.setTitle(strings.get(keys[9]));
+
+
+
+		closeBox.add(closeBtn);
+		menu2.add(closeBox);
+
 
 		//-- events --//
 
@@ -277,7 +593,7 @@ export class Toolbar {
 			if (settings.background) {
 				backgroundBtn.setTitle(strings.get(keys[7]));
 			}
-			
+
 		});
 	}
 

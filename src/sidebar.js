@@ -41,8 +41,11 @@ export class Sidebar {
 			container.addTab("btn-d", strings.get(keys[2]), new BookmarksPanel(reader));
 		}
 		if (controls.annotations) {
-			container.addTab("btn-a", strings.get(keys[3]), new AnnotationsPanel(reader));
+			const annotationPanel = new AnnotationsPanel(reader);
+			container.addTab("btn-a", strings.get(keys[3]), annotationPanel);
+			reader.annotationsPanel = annotationPanel;
 		}
+
 		container.addTab("btn-s", strings.get(keys[4]), new SearchPanel(reader));
 		container.addTab("btn-c", strings.get(keys[5]), new SettingsPanel(reader));
 		container.addTab("btn-i", strings.get(keys[6]), new MetadataPanel(reader));

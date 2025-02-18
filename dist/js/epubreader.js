@@ -798,7 +798,10 @@ class Strings {
 				"sidebar/metadata/direction": "Direction", // page-progression-direction
 
 				"notedlg/label": "Note",
-				"notedlg/add": "Add"
+				"notedlg/add": "Add",
+
+				"status/fullscreen": "Fullscreen",
+				"status/": "",
 			},
 			fr: {
 				"toolbar/sidebar": "Barre latérale",
@@ -847,7 +850,10 @@ class Strings {
 				"sidebar/metadata/direction": "???",
 
 				"notedlg/label": "???",
-				"notedlg/add": "Ajouter"
+				"notedlg/add": "Ajouter",
+
+				"status/fullscreen": "",
+				"status/": "",
 			},
 			ja: {
 				"toolbar/sidebar": "サイドバー",
@@ -896,7 +902,10 @@ class Strings {
 				"sidebar/metadata/direction": "???",
 
 				"notedlg/label": "???",
-				"notedlg/add": "追加"
+				"notedlg/add": "追加",
+
+				"status/fullscreen": "",
+				"status/": "",
 			},
 			ru: {
 				"toolbar/sidebar": "Боковая панель",
@@ -945,7 +954,10 @@ class Strings {
 				"sidebar/metadata/direction": "Направление",
 
 				"notedlg/label": "Заметка",
-				"notedlg/add": "Добавить"
+				"notedlg/add": "Добавить",
+
+				"status/fullscreen": "",
+				"status/": "",
 			},
 			vi: {
 				"toolbar/sidebar": "Thanh bên",
@@ -994,7 +1006,10 @@ class Strings {
 				"sidebar/metadata/direction": "???", // page-progression-direction
 
 				"notedlg/label": "???",
-				"notedlg/add": "???"
+				"notedlg/add": "???",
+
+				"status/fullscreen": "Toàn màn hình",
+				"status/": "",
 			}
 		};
 
@@ -1809,7 +1824,9 @@ class Toolbar {
 			"toolbar/openbook/error",
 			"toolbar/bookmark",
 			"toolbar/fullscreen",
-			"toolbar/background"
+			"toolbar/background",
+			"toolbar/search",
+			"toolbar/close",
 		];
 
 		/*------------------------ Toolbar Menu 1 --------------------------*/
@@ -1826,7 +1843,332 @@ class Toolbar {
 		openerBox.add(openerBtn);
 		menu1.add(openerBox);
 
-		// Button "-", "+" and input for font-size
+		let prevBox, prevBtn;
+		let nextBox, nextBtn;
+		if (settings.arrows === "toolbar") {
+			prevBox = new UIDiv().setId("btn-p").setClass("box");
+			prevBtn = new UIInput("button");
+			prevBtn.setTitle(strings.get(keys[1]));
+			prevBtn.dom.onclick = (e) => {
+
+				reader.emit("prev");
+				e.preventDefault();
+				prevBtn.dom.blur();
+			};
+			prevBox.add(prevBtn);
+			menu1.add(prevBox);
+
+			nextBox = new UIDiv().setId("btn-n").setClass("box");
+			nextBtn = new UIInput("button");
+			nextBtn.dom.title = strings.get(keys[2]);
+			nextBtn.dom.onclick = (e) => {
+
+				reader.emit("next");
+				e.preventDefault();
+				nextBtn.dom.blur();
+			};
+			nextBox.add(nextBtn);
+			menu1.add(nextBox);
+		}
+
+		/* ------------------------ Button Logo ------------------------- */
+		const logoBox = new UIDiv().setId("btn-logo").setClass("logo");
+		const logoLink = new UILink().setId("logo-link").setHref("#").setTextContent("LOGO");
+
+		logoBox.add(logoLink);
+		menu1.add(logoBox);
+
+		/* ------------------------ Button Index List (muc luc) -------------------------- */
+		let tocBox, tocBtn;
+		tocBox = new UIDiv().setId("btn-t").setClass("box");
+		tocBtn = new UIInput("button");
+
+		// load toc content title for toc list
+		tocBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			reader.book.loaded.navigation.then((toc) => {
+				showToc(toc);
+			})
+		}
+
+		tocBox.add(tocBtn);
+		menu1.add(tocBox);
+
+		// Function to show the toc list
+		function showToc(toc) {
+			let existingToc = document.getElementById("toolbar-toc-list");
+
+			if (!existingToc) {
+				let tocList = document.createElement("ul");
+				tocList.setAttribute("id", "toolbar-toc-list");
+
+				let tocTitle = document.createElement("h3");
+				tocTitle.textContent = "Mục lục";
+
+				tocList.appendChild(tocTitle);
+
+				toc.forEach((chapter) => {
+					let tocItem = document.createElement("li");
+					let tocLink = document.createElement("a");
+
+					tocLink.href = "#";
+					tocLink.textContent = chapter.label;
+
+					tocLink.onclick = (e) => {
+						e.preventDefault();
+
+						document.querySelectorAll("#toolbar-toc-list li a").forEach((link) => {
+							link.classList.remove("active");
+						})
+
+						tocLink.classList.add("active");
+
+						// show the chapter with the title chosed in toc list
+						reader.rendition.display(chapter.href);
+					};
+
+					tocItem.appendChild(tocLink);
+					tocList.appendChild(tocItem);
+				});
+
+				tocBox.dom.appendChild(tocList);
+			}
+
+			let tocList = document.getElementById("toolbar-toc-list");
+			tocList.classList.toggle("active");
+		}
+
+
+
+		/* ------------------------ Button My Bookmark (bookmark cua toi) --------------------------*/
+		let bookmarksBox, bookmarksBtn;
+		bookmarksBox = new UIDiv().setId("btn-d").setClass("box");
+		bookmarksBtn = new UIInput("button");
+
+		bookmarksBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			showBookmarks();
+		}
+
+		bookmarksBox.add(bookmarksBtn);
+		menu1.add(bookmarksBox);
+
+		function showBookmarks() {
+			let existingList = document.getElementById("toolbar-bookmarks-list");
+
+			if (!existingList) {
+				let bookmarksList = document.createElement("ul");
+				bookmarksList.setAttribute("id", "toolbar-bookmarks-list");
+
+				let title = document.createElement("h3");
+				title.textContent = "Bookmarks của tui";
+
+				bookmarksList.appendChild(title);
+
+				reader.settings.bookmarks.forEach((cfi) => {
+					let bookmarkItem = document.createElement("li");
+					let bookmarkLink = document.createElement("a");
+					let deleteBtn = document.createElement("span");
+
+					bookmarkLink.href = "#";
+					bookmarkLink.textContent = `Bookmark ${bookmarksList.children.length}`;
+
+					bookmarkLink.onclick = (e) => {
+						e.preventDefault();
+
+						document.querySelectorAll("#toolbar-bookmarks-list li a").forEach((link) => {
+							link.classList.remove("active");
+						})
+
+						bookmarkLink.classList.add("active");
+
+						reader.rendition.display(cfi);
+					}
+
+					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+
+					deleteBtn.onclick = (e) => {
+						e.stopPropagation();
+						reader.removeBookmarkFromToolbar(cfi);
+					}
+
+					bookmarkItem.appendChild(bookmarkLink);
+					bookmarkItem.appendChild(deleteBtn);
+					bookmarksList.appendChild(bookmarkItem);
+				})
+
+				bookmarkBox.dom.appendChild(bookmarksList);
+			}
+
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+			bookmarksList.classList.toggle("active");
+		}
+
+		// Hàm xóa bookmark từ toolbar
+		reader.removeBookmarkFromToolbar = function (cfi) {
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+			if (!bookmarksList) return;
+
+			let bookmarkItems = bookmarksList.querySelectorAll("li");
+			let targetItem = Array.from(bookmarkItems).find(item => {
+				return item.querySelector("a").textContent.includes(cfi);
+			});
+
+			if (targetItem) {
+				targetItem.remove();
+			}
+
+			const index = reader.settings.bookmarks.indexOf(cfi);
+			if (index !== -1) {
+				reader.settings.bookmarks.splice(index, 1);
+			}
+
+			reader.emit("bookmarked", false, cfi);
+		};
+
+
+
+		/* ------------------------ Button Highlight And Note ---------------------------- */
+		let annotationsBox, annotationsBtn;
+		annotationsBox = new UIDiv().setId("btn-a").setClass("box");
+		annotationsBtn = new UIInput("button");
+
+		// show annotations list when click icon on toolbar
+		annotationsBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			showAnnotations();
+		}
+
+		annotationsBox.add(annotationsBtn);
+		menu1.add(annotationsBox);
+
+		// Function to show the annotations list
+		function showAnnotations() {
+			let existingList = document.getElementById("toolbar-annotations-list");
+
+			if (!existingList) {
+				let annotationsList = document.createElement("ul");
+				annotationsList.setAttribute("id", "toolbar-annotations-list");
+
+				let title = document.createElement("h3");
+				title.textContent = "Highlights & Ghi chú";
+
+				annotationsList.appendChild(title);
+
+				reader.settings.annotations.forEach((note) => {
+					let noteItem = document.createElement("li");
+					let noteLink = document.createElement("a");
+					let deleteBtn = document.createElement("span");
+
+					noteLink.href = "#";
+					noteLink.textContent = note.text;
+
+					noteLink.onclick = (e) => {
+						e.preventDefault();
+
+						document.querySelectorAll("#toolbar-annotations-list li a").forEach((link) => {
+							link.classList.remove("active");
+						})
+
+						noteLink.classList.add("active");
+
+						reader.rendition.display(note.cfi);
+					}
+
+					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+
+					// emit event to delete annotation items
+					deleteBtn.onclick = (e) => {
+						e.stopPropagation();
+						reader.removeNoteFromToolbar(note);
+					}
+
+					noteItem.appendChild(noteLink);
+					noteItem.appendChild(deleteBtn);
+					annotationsList.appendChild(noteItem);
+				})
+
+				annotationsBox.dom.appendChild(annotationsList);
+			}
+
+			let annotationsList = document.getElementById("toolbar-annotations-list");
+			annotationsList.classList.toggle("active");
+		}
+
+		reader.removeNoteFromToolbar = function (note) {
+			let annotationsList = document.getElementById("toolbar-annotations-list");
+			if (!annotationsList) return;
+
+			let noteItems = annotationsList.querySelectorAll("li");
+			let targetItem = Array.from(noteItems).find(item => {
+				item.querySelector('a').textContent === note.text;
+			})
+
+			if (targetItem) {
+				targetItem.remove();
+			}
+
+			const annotationsPanel = reader.annotationsPanel;
+			if (annotationsPanel) {
+				annotationsPanel.removeNote(note);
+				annotationsPanel.update();
+			}
+
+			const index = reader.settings.annotations.findIndex((n) => n.cfi === note.cfi);
+			if (index !== -1) {
+				reader.settings.annotations.splice(index, 1);
+			}
+
+			reader.rendition.annotations.remove(note.cfi, "highlight");
+		}
+
+
+
+
+		/* ----------------------------- Current Page -------------------------------- */
+		const centerPageCount = new UIDiv().setClass("menu-center");
+
+		const centerLabel = new UILabel().setClass("toolbar-center-label");
+		centerLabel.setTextContent("Determined");
+
+		const curOfTotal = new UIDiv().setClass("page-map");
+		const curPageIndex = new UISpan().setClass("current-page-index").setTextContent("1");
+		const separator = new UIText().setTextContent(" của ");
+		const totalPage = new UISpan().setClass("total-pages").setTextContent("200");
+
+		curOfTotal.add(curPageIndex);
+		curOfTotal.add(separator);
+		curOfTotal.add(totalPage);
+
+		centerPageCount.add(centerLabel);
+		centerPageCount.add(curOfTotal);
+
+
+
+		/*------------------------ Toolbar Menu 2 --------------------------*/
+		const menu2 = new UIDiv().setClass("menu-2");
+		// Button change background
+		let backgroundBox, colorPicker;
+		if (settings.background) {
+			// Init elements: background box div, input color picker
+			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
+			colorPicker = new UIInput("color").setClass("color-picker");
+			colorPicker.dom.title = strings.get(keys[7]);
+
+			// Handle event get color from color table of input color
+			colorPicker.dom.oninput = (e) => {
+				const selectedColor = e.target.value;
+
+				// Emit 'colorchanged' event with selected color
+				reader.emit("colorchanged", selectedColor);
+			}
+
+			backgroundBox.add(colorPicker);
+			menu2.add(backgroundBox);
+		}
+
+
+		// Button "A-", "A+" and input (hidden) for font-size
 		let fontLabel = new UILabel().setClass("font-size-px").setTextContent("Fontsize (px):")
 		let fontSizeBox = new UIDiv().setId("btn-fontsize").setClass("box");
 		let decreaseFontBtn = new UIInput("button").setClass("btn-font-decrease");
@@ -1867,58 +2209,8 @@ class Toolbar {
 		fontSizeBox.add(decreaseFontBtn);
 		fontSizeBox.add(fontSizeInput);
 		fontSizeBox.add(increaseFontBtn);
-		menu1.add(fontSizeBox);
+		menu2.add(fontSizeBox);
 
-
-		let prevBox, prevBtn;
-		let nextBox, nextBtn;
-		if (settings.arrows === "toolbar") {
-			prevBox = new UIDiv().setId("btn-p").setClass("box");
-			prevBtn = new UIInput("button");
-			prevBtn.setTitle(strings.get(keys[1]));
-			prevBtn.dom.onclick = (e) => {
-
-				reader.emit("prev");
-				e.preventDefault();
-				prevBtn.dom.blur();
-			};
-			prevBox.add(prevBtn);
-			menu1.add(prevBox);
-
-			nextBox = new UIDiv().setId("btn-n").setClass("box");
-			nextBtn = new UIInput("button");
-			nextBtn.dom.title = strings.get(keys[2]);
-			nextBtn.dom.onclick = (e) => {
-
-				reader.emit("next");
-				e.preventDefault();
-				nextBtn.dom.blur();
-			};
-			nextBox.add(nextBtn);
-			menu1.add(nextBox);
-		}
-
-		/*------------------------ Toolbar Menu 2 --------------------------*/
-		const menu2 = new UIDiv().setClass("menu-2");
-		// Button change background
-		let backgroundBox, colorPicker;
-		if (settings.background) {
-			// Init elements: background box div, input color picker
-			backgroundBox = new UIDiv().setId("btn-bg").setClass("box");
-			colorPicker = new UIInput("color").setClass("color-picker");
-			colorPicker.dom.title = strings.get(keys[7]);
-
-			// Handle event get color from color table of input color
-			colorPicker.dom.oninput = (e) => {
-				const selectedColor = e.target.value;
-
-				// Emit 'colorchanged' event with selected color
-				reader.emit("colorchanged", selectedColor);
-			}
-
-			backgroundBox.add(colorPicker);
-			menu2.add(backgroundBox);
-		}
 
 		// Button open file
 		let openbookBtn;
@@ -1963,6 +2255,24 @@ class Toolbar {
 			openbookBox.add(openbookBtn);
 			menu2.add(openbookBox);
 		}
+
+
+		// Button search 
+		let searchBox, searchBtn;
+		let searchInput, searchResults;
+		searchBox = new UIDiv().setId("btn-s").setClass("box");
+		searchBtn = new UIInput("button");
+		searchBtn.setTitle(strings.get(keys[8]));
+		searchBtn.dom.onclick = () => {
+			searchBox.setClass("active");
+			searchInput.dom.focus();
+		}
+
+		
+
+		searchBox.add(searchBtn);
+		menu2.add(searchBox);
+
 
 		// Button Bookmark
 		let bookmarkBox, bookmarkBtn;
@@ -2018,8 +2328,20 @@ class Toolbar {
 			menu2.add(fullscreenBox);
 		}
 
-		container.add([menu1, menu2]);
+		container.add([menu1, centerPageCount, menu2]);
 		document.body.appendChild(container.dom);
+
+		// Button Close
+		let closeBox, closeBtn;
+		closeBox = new UIDiv().setId("btn-close").setClass("box");
+		closeBtn = new UIInput("button").setClass("active");
+		closeBtn.setTitle(strings.get(keys[9]));
+
+
+
+		closeBox.add(closeBtn);
+		menu2.add(closeBox);
+
 
 		//-- events --//
 
@@ -2070,6 +2392,7 @@ class Toolbar {
 			if (settings.background) {
 				backgroundBtn.setTitle(strings.get(keys[7]));
 			}
+
 		});
 	}
 
@@ -2103,7 +2426,9 @@ class Content {
 				reader.emit("prev");
 				e.preventDefault();
 			};
-			prev.add(new UISpan("<"));
+			const iconLeft = new UISpan();
+			iconLeft.dom.innerHTML = '<i class="fa-solid fa-angle-left"></i>';
+			prev.add(iconLeft);
 			container.add(prev);
 		}
 
@@ -2123,7 +2448,9 @@ class Content {
 				reader.emit("next");
 				e.preventDefault();
 			};
-			next.add(new UISpan(">"));
+			const iconRight = new UISpan();
+			iconRight.dom.innerHTML = '<i class="fa-solid fa-angle-right"></i>';
+			next.add(iconRight);
 			container.add(next);
 		}
 
@@ -2522,6 +2849,29 @@ class AnnotationsPanel extends UIPanel {
 		this.reader.rendition.annotations.add(
 			"highlight", note.cfi, {}, call, "note-highlight", {});
 		this.update();
+
+		const toolbarList = document.getElementById("toolbar-annotations-list");
+		if (toolbarList) {
+			const toolbarNoteItem = document.createElement("li");
+			const toolbarNoteLink = document.createElement("a");
+			toolbarNoteLink.href = "#";
+			toolbarNoteLink.textContent = note.text; // sửa lại nếu cần
+			toolbarNoteLink.onclick = (e) => {
+				e.preventDefault();
+				this.reader.rendition.display(note.cfi);
+			};
+			toolbarNoteItem.appendChild(toolbarNoteLink);
+
+			const deleteBtn = document.createElement("span");
+			deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+
+			deleteBtn.onclick = (e) => {
+				e.stopPropagation();
+				this.reader.removeNoteFromToolbar(note);
+			}
+			toolbarNoteItem.appendChild(deleteBtn);
+			toolbarList.appendChild(toolbarNoteItem);
+		}
 	}
 
 	removeNote(note) {
@@ -2534,6 +2884,16 @@ class AnnotationsPanel extends UIPanel {
 		this.reader.settings.annotations.splice(index, 1);
 		this.reader.rendition.annotations.remove(note.cfi, "highlight");
 		this.update();
+
+		const toolbarList = document.getElementById("toolbar-annotations-list");
+		if (toolbarList) {
+			const toolbarItems = toolbarList.querySelectorAll("li");
+			toolbarItems.forEach(item => {
+				if (item.querySelector("a").textContent === note.text) {
+					item.remove();
+				}
+			})
+		}
 	}
 
 	clearNotes() {
@@ -2909,8 +3269,11 @@ class Sidebar {
 			container.addTab("btn-d", strings.get(keys[2]), new BookmarksPanel(reader));
 		}
 		if (controls.annotations) {
-			container.addTab("btn-a", strings.get(keys[3]), new AnnotationsPanel(reader));
+			const annotationPanel = new AnnotationsPanel(reader);
+			container.addTab("btn-a", strings.get(keys[3]), annotationPanel);
+			reader.annotationsPanel = annotationPanel;
 		}
+
 		container.addTab("btn-s", strings.get(keys[4]), new SearchPanel(reader));
 		container.addTab("btn-c", strings.get(keys[5]), new SettingsPanel(reader));
 		container.addTab("btn-i", strings.get(keys[6]), new MetadataPanel(reader));
@@ -3018,7 +3381,104 @@ class NoteDlg {
         });
     }
 }
+;// CONCATENATED MODULE: ./src/status.js
+
+
+class Status {
+    constructor(reader) {
+        const strings = reader.strings;
+        const settings = reader.settings;
+
+        const container = new UIDiv().setId("status-bar");
+        const keys = [
+            "status/fullscreen",
+            "status/apprec",
+        ];
+
+        /* ---------------------------- Status Bar ----------------------------- */
+        const leftText = new UIDiv().setClass("status-title");
+        const rightAction = new UIDiv().setClass("status-action");
+
+        let text = new UILabel().setClass("status-text").setTextContent("Trang cuối của chương");
+        leftText.add(text);
+
+
+        // Button apps rectangle
+        let appRecBtn;
+        const appRecBox = new UIDiv().setId("btn-ar").setClass("box");
+        appRecBtn = new UIInput("button");
+        appRecBtn.setTitle(strings.get(keys[1]));
+        appRecBtn.dom.onclick = (e) => {
+            e.preventDefault();
+        };
+
+        appRecBox.add(appRecBtn);
+        rightAction.add(appRecBox);
+
+
+        // Button Full Screen
+        let fullscreenBtn;
+        if (settings.fullscreen) {
+
+            const fullscreenBox = new UIDiv().setId("btn-f").setClass("box");
+            fullscreenBtn = new UIInput("button");
+            fullscreenBtn.setTitle(strings.get(keys[0]));
+            fullscreenBtn.dom.onclick = (e) => {
+
+                this.toggleFullScreen();
+                e.preventDefault();
+            };
+
+            document.onkeydown = (e) => {
+
+                if (e.key === "F11") {
+                    e.preventDefault();
+                    this.toggleFullScreen();
+                }
+            };
+
+            document.onfullscreenchange = (e) => {
+
+                // const w = window.screen.width === e.target.clientWidth;
+                // const h = window.screen.height === e.target.clientHeight;
+
+                if (document.fullscreenElement) {
+                    fullscreenBox.addClass("resize-small");
+                } else {
+                    fullscreenBox.removeClass("resize-small");
+                }
+            };
+
+
+            fullscreenBox.add(fullscreenBtn);
+            rightAction.add(fullscreenBox);
+        }
+
+        reader.on("languagechanged", (value) => {
+            if (settings.fullscreen) {
+                fullscreenBtn.setTitle(strings.get(keys[0]));
+            }
+        });
+
+
+        container.add([leftText, rightAction]);
+        document.body.appendChild(container.dom);
+    }
+
+    toggleFullScreen() {
+
+        document.activeElement.blur();
+
+        if (document.fullscreenElement === null) {
+            document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
+
 ;// CONCATENATED MODULE: ./src/reader.js
+
 
 
 
@@ -3046,6 +3506,7 @@ class Reader {
 			this.strings = new Strings(this);
 			this.toolbar = new Toolbar(this);
 			this.content = new Content(this);
+			this.status = new Status(this);
 			this.sidebar = new Sidebar(this);
 			if (this.settings.annotations) {
 				this.notedlg = new NoteDlg(this);
@@ -3376,7 +3837,7 @@ class Reader {
 				this.emit("styleschanged", { fontSize: value });
 				break;
 			case "0":
-				value = 100;
+				value = 16;
 				this.emit("styleschanged", { fontSize: value });
 				break;
 			case "ArrowLeft":

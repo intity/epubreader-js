@@ -2,6 +2,7 @@
 @import url("toolbar.css");
 @import url("sidebar.css");
 @import url("notedlg.css");
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 @font-face {
 	font-family: 'fontello';
@@ -33,9 +34,9 @@ body {
 }
 
 #viewer {
-    color: inherit;
+	color: inherit;
 	margin: 0 auto;
-    display: flex;
+	display: flex;
 	z-index: 2;
 	overflow: hidden;
 	align-items: center;
@@ -43,19 +44,19 @@ body {
 }
 
 #viewer.paginated {
-    width: calc(100% - 116px);
-    height: calc(100% - 116px);
+	width: calc(100% - 116px);
+	height: calc(100% - 116px);
 }
 
 #viewer.scrolled {
-    top: 58px;
-    width: calc(100% - 116px);
-    height: calc(100% - 58px);
-    position: sticky;
+	top: 58px;
+	width: calc(100% - 116px);
+	height: calc(100% - 58px);
+	position: sticky;
 }
 
 #viewer .epub-view {
-    width: auto !important;
+	width: auto !important;
 }
 
 #viewer iframe {
@@ -64,10 +65,27 @@ body {
 
 #prev {
 	text-align: start;
+	transform: translateX(20px);
 }
 
 #next {
 	text-align: end;
+	transform: translateX(-20px);
+}
+
+#prev,
+#next {
+	box-shadow: 0px 4px 14px 0px #00000026;
+	border-radius: 50%;
+	text-align: center;
+	background: #FFFFFFE5;
+	line-height: 52px;
+}
+
+#prev span,
+#next span {
+	color: #000;
+	font-size: 26px;
 }
 
 .arrow {
@@ -99,8 +117,8 @@ body {
 	color: #777;
 }
 
-.arrow:active > span,
-.arrow.active > span {
+.arrow:active>span,
+.arrow.active>span {
 	color: #000;
 }
 
@@ -138,15 +156,47 @@ body {
 	background-position: center;
 }
 
+
+/* --------------------------------- Status Bar Style ------------------------------------ */
+#status-bar {
+	height: 58px;
+	vertical-align: middle;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	align-items: center;
+	padding: 0 20px;
+	background: #f1f1f1;
+	border-top: 2px solid #dedede;
+}
+
+#status-bar {
+	position: fixed;
+	z-index: 10;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.status-title {
+	font-family: Be Vietnam Pro, sans-serif;
+	font-weight: 600;
+}
+
+.status-action {
+	justify-self: end;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+}
+
+
 /**
  * iPhone 5 : 320 x 568
  */
-@media
-only screen and (max-width: 320px) and (orientation: portrait),
+@media only screen and (max-width: 320px) and (orientation: portrait),
 only screen and (max-width: 568px) and (orientation: landscape) {
-    #viewer.scrolled {
-        height: calc(100% - 52px);
-    }
+	#viewer.scrolled {
+		height: calc(100% - 52px);
+	}
 
 	.arrow span {
 		font-size: 32px;
@@ -163,16 +213,15 @@ only screen and (max-width: 568px) and (orientation: landscape) {
  * iPhone 12/14         : 390 x 844
  * iPhone 14/15 Pro Max : 430 x 932
  */
-@media
-only screen and (min-width: 320px) and (max-width: 430px) and (orientation: portrait),
+@media only screen and (min-width: 320px) and (max-width: 430px) and (orientation: portrait),
 only screen and (min-width: 568px) and (max-width: 932px) and (orientation: landscape) {
-    #viewer.paginated {
-        width: calc(100% - 32px);
-    }
+	#viewer.paginated {
+		width: calc(100% - 32px);
+	}
 
-    #viewer.scrolled {
-        width: 100%;
-    }
+	#viewer.scrolled {
+		width: 100%;
+	}
 
 	.arrow span {
 		font-size: 40px;
@@ -187,16 +236,15 @@ only screen and (min-width: 568px) and (max-width: 932px) and (orientation: land
  * iPad Pro 11     :  834 x 1194
  * iPad Pro 12.9   : 1024 x 1366
  */
-@media
-only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait),
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait),
 only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
-    #viewer.paginated {
-        width: calc(100% - 116px);
-    }
+	#viewer.paginated {
+		width: calc(100% - 116px);
+	}
 
-    #viewer.scrolled {
-        width: 100%;
-    }
+	#viewer.scrolled {
+		width: 100%;
+	}
 
 	.arrow span {
 		font-size: 50px;

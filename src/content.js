@@ -16,7 +16,9 @@ export class Content {
 				reader.emit("prev");
 				e.preventDefault();
 			};
-			prev.add(new UISpan("<"));
+			const iconLeft = new UISpan();
+			iconLeft.dom.innerHTML = '<i class="fa-solid fa-angle-left"></i>';
+			prev.add(iconLeft);
 			container.add(prev);
 		}
 
@@ -36,7 +38,9 @@ export class Content {
 				reader.emit("next");
 				e.preventDefault();
 			};
-			next.add(new UISpan(">"));
+			const iconRight = new UISpan();
+			iconRight.dom.innerHTML = '<i class="fa-solid fa-angle-right"></i>';
+			next.add(iconRight);
 			container.add(next);
 		}
 
