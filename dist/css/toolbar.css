@@ -59,7 +59,7 @@
 
 /* Hide the menu icon in menu-1 on toolbar */
 .menu-1 #btn-m {
-	/* display: none; */
+	display: none;
 }
 
 /* Hide the fullscreen button in menu-2 on toolbar */

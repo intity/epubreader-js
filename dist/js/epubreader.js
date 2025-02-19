@@ -1805,7 +1805,83 @@ class UIButton extends UIElement {
 		super("button");
 	}
 }
+;// CONCATENATED MODULE: ./src/sidebar/search.js
+
+
+class SearchPanel extends UIPanel {
+
+	constructor(reader) {
+
+		super();
+		const container = new UIDiv().setClass("list-container");
+		const strings = reader.strings;
+
+		let searchQuery = undefined;
+		const search = new UIInput("search").setId("nav-q");
+		search.dom.placeholder = strings.get("sidebar/search/placeholder");
+		search.dom.onsearch = () => {
+
+			const value = search.getValue();
+
+			if (value.length === 0) {
+				this.items.clear();
+			} else if (searchQuery !== value) {
+				this.items.clear();
+				this.doSearch(value).then(results => {
+
+					results.forEach(data => {
+						this.set(data);
+					});
+				});
+			}
+			searchQuery = value;
+		};
+
+		this.setId("search");
+		this.items = new UIList();
+		container.add(this.items);
+		this.add([new UIBox(search), container]);
+		this.reader = reader;
+		this.selector = undefined;
+		//
+		// improvement of the highlighting of keywords is required...
+		//
+	}
+
+	/**
+	 * Searching the entire book
+	 * @param {*} q Query keyword
+	 * @returns The search result array.
+	 */
+	async doSearch(q) {
+
+		const book = this.reader.book;
+		const results = await Promise.all(
+			book.spine.spineItems.map(item => item.load(book.load.bind(book))
+				.then(item.find.bind(item, q)).finally(item.unload.bind(item))));
+		return await Promise.resolve([].concat.apply([], results));
+	}
+
+	set(data) {
+
+		const link = new UILink("#" + data.cfi, data.excerpt);
+		const item = new UIItem();
+		link.dom.onclick = () => {
+
+			if (this.selector && this.selector !== item)
+				this.selector.unselect();
+			
+			item.select();
+			this.selector = item;
+			this.reader.rendition.display(data.cfi);
+			return false;
+		};
+		item.add(link);
+		this.items.add(item);
+	}
+}
 ;// CONCATENATED MODULE: ./src/toolbar.js
+
 
 
 class Toolbar {
@@ -1954,58 +2030,68 @@ class Toolbar {
 		menu1.add(bookmarksBox);
 
 		function showBookmarks() {
-			let existingList = document.getElementById("toolbar-bookmarks-list");
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
 
-			if (!existingList) {
-				let bookmarksList = document.createElement("ul");
+			if (!bookmarksList) {
+				bookmarksList = document.createElement("ul");
 				bookmarksList.setAttribute("id", "toolbar-bookmarks-list");
-
-				let title = document.createElement("h3");
-				title.textContent = "Bookmarks của tui";
-
-				bookmarksList.appendChild(title);
-
-				reader.settings.bookmarks.forEach((cfi) => {
-					let bookmarkItem = document.createElement("li");
-					let bookmarkLink = document.createElement("a");
-					let deleteBtn = document.createElement("span");
-
-					bookmarkLink.href = "#";
-					bookmarkLink.textContent = `Bookmark ${bookmarksList.children.length}`;
-
-					bookmarkLink.onclick = (e) => {
-						e.preventDefault();
-
-						document.querySelectorAll("#toolbar-bookmarks-list li a").forEach((link) => {
-							link.classList.remove("active");
-						})
-
-						bookmarkLink.classList.add("active");
-
-						reader.rendition.display(cfi);
-					}
-
-					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
-
-					deleteBtn.onclick = (e) => {
-						e.stopPropagation();
-						reader.removeBookmarkFromToolbar(cfi);
-					}
-
-					bookmarkItem.appendChild(bookmarkLink);
-					bookmarkItem.appendChild(deleteBtn);
-					bookmarksList.appendChild(bookmarkItem);
-				})
-
 				bookmarkBox.dom.appendChild(bookmarksList);
 			}
 
-			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+			updateBookmarksList();
 			bookmarksList.classList.toggle("active");
+		}
+
+		reader.on("bookmarked", (boolean, cfi) => {
+			updateBookmarksList();
+		})
+
+		function updateBookmarksList() {
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+
+			if (!bookmarksList) return;
+
+			bookmarksList.innerHTML = "";
+
+			let title = document.createElement("h3");
+			title.textContent = "Bookmarks của tui";
+			bookmarksList.appendChild(title);
+
+			reader.settings.bookmarks.forEach((cfi, index) => {
+				let bookmarkItem = document.createElement("li");
+				let bookmarkLink = document.createElement("a");
+				let deleteBtn = document.createElement("span");
+
+				bookmarkLink.href = "#";
+				bookmarkLink.textContent = `Bookmark ${index + 1}`;
+
+				bookmarkLink.onclick = (e) => {
+					e.preventDefault();
+
+					document.querySelectorAll("#toolbar-bookmarks-list li a").forEach((link) => {
+						link.classList.remove("active");
+					});
+
+					bookmarkLink.classList.add("active");
+
+					reader.rendition.display(cfi);
+				};
+
+				deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+				deleteBtn.onclick = (e) => {
+					e.stopPropagation();
+					reader.removeBookmarkFromToolbar(cfi);
+				};
+
+				bookmarkItem.appendChild(bookmarkLink);
+				bookmarkItem.appendChild(deleteBtn);
+				bookmarksList.appendChild(bookmarkItem);
+			})
 		}
 
 		// Hàm xóa bookmark từ toolbar
 		reader.removeBookmarkFromToolbar = function (cfi) {
+
 			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
 			if (!bookmarksList) return;
 
@@ -2024,6 +2110,7 @@ class Toolbar {
 			}
 
 			reader.emit("bookmarked", false, cfi);
+			reader.bookmarksPanel.removeBookmark(cfi);
 		};
 
 
@@ -2076,7 +2163,6 @@ class Toolbar {
 					}
 
 					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
-
 					// emit event to delete annotation items
 					deleteBtn.onclick = (e) => {
 						e.stopPropagation();
@@ -2263,15 +2349,81 @@ class Toolbar {
 		searchBox = new UIDiv().setId("btn-s").setClass("box");
 		searchBtn = new UIInput("button");
 		searchBtn.setTitle(strings.get(keys[8]));
-		searchBtn.dom.onclick = () => {
-			searchBox.setClass("active");
-			searchInput.dom.focus();
-		}
 
-		
+		searchBtn.dom.onclick = (e) => {
+			e.stopPropagation();
+			showSearchPopup();
+		}
 
 		searchBox.add(searchBtn);
 		menu2.add(searchBox);
+
+		function showSearchPopup() {
+			let existingPopup = document.getElementById("toolbar-search-list");
+			if (!existingPopup) {
+				let searchPopup = document.createElement("div");
+				searchPopup.setAttribute("id", "toolbar-search-list");
+				searchPopup.classList.add("search-popup");
+
+				let searchContainer = document.createElement("div");
+				searchContainer.classList.add("search-container");
+
+				let searchIcon = document.createElement("span");
+				searchIcon.classList.add("search-icon");
+				searchIcon.innerHTML = '<i class="bi bi-search"></i>';
+
+				let searchInput = document.createElement("input");
+				searchInput.setAttribute("type", "search");
+				searchInput.setAttribute("placeholder", "Search");
+				searchInput.setAttribute("id", "nav-q");
+				searchInput.setAttribute("class", "toolbar-search-input");
+
+				searchContainer.appendChild(searchIcon);
+				searchContainer.appendChild(searchInput);
+
+				let resultContainer = document.createElement("ul");
+				resultContainer.setAttribute('id', 'toolbar-search-results');
+
+				let searchPanel = new SearchPanel(reader);
+				searchInput.oninput = async () => {
+					let query = searchInput.value.trim();
+					if (query.length > 0) {
+						let results = await searchPanel.doSearch(query);
+						resultContainer.innerHTML = "";
+
+						if (results.length === 0) {
+							let noResultItem = document.createElement("li");
+							noResultItem.innerText = "Không tìm thấy kết quả trùng khớp";
+							noResultItem.style.color = "gray";
+							noResultItem.style.padding = "8px";
+							resultContainer.appendChild(noResultItem);
+						}
+
+						results.forEach((data) => {
+							let item = document.createElement("li");
+							let link = document.createElement("a");
+							link.href = "#" + data.cfi;
+							link.textContent = data.excerpt;
+							link.onclick = (e) => {
+								e.preventDefault();
+								searchPanel.reader.rendition.display(data.cfi);
+							}
+							item.appendChild(link);
+							resultContainer.appendChild(item);
+						})
+					} else {
+						resultContainer.innerHTML = "";
+					}
+				}
+
+				searchPopup.appendChild(searchContainer);
+				searchPopup.appendChild(resultContainer);
+				searchBox.dom.appendChild(searchPopup);
+			}
+
+			let searchPopup = document.getElementById("toolbar-search-list");
+			searchPopup.classList.toggle("active");
+		}
 
 
 		// Button Bookmark
@@ -2678,7 +2830,6 @@ class BookmarksPanel extends UIPanel {
 		});
 
 		reader.on("bookmarked", (boolean, cfi) => {
-
 			if (boolean) {
 				this.appendBookmark();
 			} else {
@@ -2697,15 +2848,16 @@ class BookmarksPanel extends UIPanel {
 	appendBookmark() {
 
 		const cfi = this.locationCfi;
+
 		if (this.reader.isBookmarked(cfi) > -1) {
 			return;
 		}
 		this.setBookmark(cfi);
 		this.reader.settings.bookmarks.push(cfi);
+
 	}
 
 	removeBookmark(cfi) {
-
 		const _cfi = cfi || this.locationCfi;
 		const index = this.reader.isBookmarked(_cfi);
 		if (index === -1) {
@@ -2722,7 +2874,6 @@ class BookmarksPanel extends UIPanel {
 	}
 
 	setBookmark(cfi) {
-
 		const link = new UILink();
 		const item = new UIItem();
 		const btnr = new UISpan().setClass("btn-remove");
@@ -2808,7 +2959,6 @@ class AnnotationsPanel extends UIPanel {
 		});
 
 		reader.on("noteadded", (note) => {
-
 			this.set(note);
 			this.update();
 		});
@@ -2904,81 +3054,6 @@ class AnnotationsPanel extends UIPanel {
 		this.notes.clear();
 		this.reader.settings.annotations = [];
 		this.update();
-	}
-}
-;// CONCATENATED MODULE: ./src/sidebar/search.js
-
-
-class SearchPanel extends UIPanel {
-
-	constructor(reader) {
-
-		super();
-		const container = new UIDiv().setClass("list-container");
-		const strings = reader.strings;
-
-		let searchQuery = undefined;
-		const search = new UIInput("search").setId("nav-q");
-		search.dom.placeholder = strings.get("sidebar/search/placeholder");
-		search.dom.onsearch = () => {
-
-			const value = search.getValue();
-
-			if (value.length === 0) {
-				this.items.clear();
-			} else if (searchQuery !== value) {
-				this.items.clear();
-				this.doSearch(value).then(results => {
-
-					results.forEach(data => {
-						this.set(data);
-					});
-				});
-			}
-			searchQuery = value;
-		};
-
-		this.setId("search");
-		this.items = new UIList();
-		container.add(this.items);
-		this.add([new UIBox(search), container]);
-		this.reader = reader;
-		this.selector = undefined;
-		//
-		// improvement of the highlighting of keywords is required...
-		//
-	}
-
-	/**
-	 * Searching the entire book
-	 * @param {*} q Query keyword
-	 * @returns The search result array.
-	 */
-	async doSearch(q) {
-
-		const book = this.reader.book;
-		const results = await Promise.all(
-			book.spine.spineItems.map(item => item.load(book.load.bind(book))
-				.then(item.find.bind(item, q)).finally(item.unload.bind(item))));
-		return await Promise.resolve([].concat.apply([], results));
-	}
-
-	set(data) {
-
-		const link = new UILink("#" + data.cfi, data.excerpt);
-		const item = new UIItem();
-		link.dom.onclick = () => {
-
-			if (this.selector && this.selector !== item)
-				this.selector.unselect();
-			
-			item.select();
-			this.selector = item;
-			this.reader.rendition.display(data.cfi);
-			return false;
-		};
-		item.add(link);
-		this.items.add(item);
 	}
 }
 ;// CONCATENATED MODULE: ./src/sidebar/settings.js
@@ -3266,7 +3341,9 @@ class Sidebar {
 
 		container.addTab("btn-t", strings.get(keys[1]), new TocPanel(reader));
 		if (controls.bookmarks) {
-			container.addTab("btn-d", strings.get(keys[2]), new BookmarksPanel(reader));
+			const bookmarkPanel = new BookmarksPanel(reader);
+			container.addTab("btn-d", strings.get(keys[2]), bookmarkPanel);
+			reader.bookmarksPanel = bookmarkPanel;
 		}
 		if (controls.annotations) {
 			const annotationPanel = new AnnotationsPanel(reader);
@@ -3671,7 +3748,6 @@ class Reader {
 	 * @returns The index of the bookmark if it exists, or -1 otherwise.
 	 */
 	isBookmarked(cfi) {
-
 		return this.settings.bookmarks.indexOf(cfi);
 	}
 

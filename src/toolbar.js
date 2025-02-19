@@ -1,4 +1,5 @@
 import { UIButton, UIDiv, UIInput, UILabel, UILink, UISpan, UIText } from "./ui.js";
+import { SearchPanel } from "./sidebar/search.js";
 
 export class Toolbar {
 
@@ -146,58 +147,68 @@ export class Toolbar {
 		menu1.add(bookmarksBox);
 
 		function showBookmarks() {
-			let existingList = document.getElementById("toolbar-bookmarks-list");
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
 
-			if (!existingList) {
-				let bookmarksList = document.createElement("ul");
+			if (!bookmarksList) {
+				bookmarksList = document.createElement("ul");
 				bookmarksList.setAttribute("id", "toolbar-bookmarks-list");
-
-				let title = document.createElement("h3");
-				title.textContent = "Bookmarks của tui";
-
-				bookmarksList.appendChild(title);
-
-				reader.settings.bookmarks.forEach((cfi) => {
-					let bookmarkItem = document.createElement("li");
-					let bookmarkLink = document.createElement("a");
-					let deleteBtn = document.createElement("span");
-
-					bookmarkLink.href = "#";
-					bookmarkLink.textContent = `Bookmark ${bookmarksList.children.length}`;
-
-					bookmarkLink.onclick = (e) => {
-						e.preventDefault();
-
-						document.querySelectorAll("#toolbar-bookmarks-list li a").forEach((link) => {
-							link.classList.remove("active");
-						})
-
-						bookmarkLink.classList.add("active");
-
-						reader.rendition.display(cfi);
-					}
-
-					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
-
-					deleteBtn.onclick = (e) => {
-						e.stopPropagation();
-						reader.removeBookmarkFromToolbar(cfi);
-					}
-
-					bookmarkItem.appendChild(bookmarkLink);
-					bookmarkItem.appendChild(deleteBtn);
-					bookmarksList.appendChild(bookmarkItem);
-				})
-
 				bookmarkBox.dom.appendChild(bookmarksList);
 			}
 
-			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+			updateBookmarksList();
 			bookmarksList.classList.toggle("active");
+		}
+
+		reader.on("bookmarked", (boolean, cfi) => {
+			updateBookmarksList();
+		})
+
+		function updateBookmarksList() {
+			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
+
+			if (!bookmarksList) return;
+
+			bookmarksList.innerHTML = "";
+
+			let title = document.createElement("h3");
+			title.textContent = "Bookmarks của tui";
+			bookmarksList.appendChild(title);
+
+			reader.settings.bookmarks.forEach((cfi, index) => {
+				let bookmarkItem = document.createElement("li");
+				let bookmarkLink = document.createElement("a");
+				let deleteBtn = document.createElement("span");
+
+				bookmarkLink.href = "#";
+				bookmarkLink.textContent = `Bookmark ${index + 1}`;
+
+				bookmarkLink.onclick = (e) => {
+					e.preventDefault();
+
+					document.querySelectorAll("#toolbar-bookmarks-list li a").forEach((link) => {
+						link.classList.remove("active");
+					});
+
+					bookmarkLink.classList.add("active");
+
+					reader.rendition.display(cfi);
+				};
+
+				deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+				deleteBtn.onclick = (e) => {
+					e.stopPropagation();
+					reader.removeBookmarkFromToolbar(cfi);
+				};
+
+				bookmarkItem.appendChild(bookmarkLink);
+				bookmarkItem.appendChild(deleteBtn);
+				bookmarksList.appendChild(bookmarkItem);
+			})
 		}
 
 		// Hàm xóa bookmark từ toolbar
 		reader.removeBookmarkFromToolbar = function (cfi) {
+
 			let bookmarksList = document.getElementById("toolbar-bookmarks-list");
 			if (!bookmarksList) return;
 
@@ -216,6 +227,7 @@ export class Toolbar {
 			}
 
 			reader.emit("bookmarked", false, cfi);
+			reader.bookmarksPanel.removeBookmark(cfi);
 		};
 
 
@@ -268,7 +280,6 @@ export class Toolbar {
 					}
 
 					deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
-
 					// emit event to delete annotation items
 					deleteBtn.onclick = (e) => {
 						e.stopPropagation();
@@ -471,9 +482,66 @@ export class Toolbar {
 				searchPopup.setAttribute("id", "toolbar-search-list");
 				searchPopup.classList.add("search-popup");
 
-				
+				let searchContainer = document.createElement("div");
+				searchContainer.classList.add("search-container");
+
+				let searchIcon = document.createElement("span");
+				searchIcon.classList.add("search-icon");
+				searchIcon.innerHTML = '<i class="bi bi-search"></i>';
+
+				let searchInput = document.createElement("input");
+				searchInput.setAttribute("type", "search");
+				searchInput.setAttribute("placeholder", "Search");
+				searchInput.setAttribute("id", "nav-q");
+				searchInput.setAttribute("class", "toolbar-search-input");
+
+				searchContainer.appendChild(searchIcon);
+				searchContainer.appendChild(searchInput);
+
+				let resultContainer = document.createElement("ul");
+				resultContainer.setAttribute('id', 'toolbar-search-results');
+
+				let searchPanel = new SearchPanel(reader);
+				searchInput.oninput = async () => {
+					let query = searchInput.value.trim();
+					if (query.length > 0) {
+						let results = await searchPanel.doSearch(query);
+						resultContainer.innerHTML = "";
+
+						if (results.length === 0) {
+							let noResultItem = document.createElement("li");
+							noResultItem.innerText = "Không tìm thấy kết quả trùng khớp";
+							noResultItem.style.color = "gray";
+							noResultItem.style.padding = "8px";
+							resultContainer.appendChild(noResultItem);
+						}
+
+						results.forEach((data) => {
+							let item = document.createElement("li");
+							let link = document.createElement("a");
+							link.href = "#" + data.cfi;
+							link.textContent = data.excerpt;
+							link.onclick = (e) => {
+								e.preventDefault();
+								searchPanel.reader.rendition.display(data.cfi);
+							}
+							item.appendChild(link);
+							resultContainer.appendChild(item);
+						})
+					} else {
+						resultContainer.innerHTML = "";
+					}
+				}
+
+				searchPopup.appendChild(searchContainer);
+				searchPopup.appendChild(resultContainer);
+				searchBox.dom.appendChild(searchPopup);
 			}
+
+			let searchPopup = document.getElementById("toolbar-search-list");
+			searchPopup.classList.toggle("active");
 		}
+
 
 		// Button Bookmark
 		let bookmarkBox, bookmarkBtn;

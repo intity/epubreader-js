@@ -42,7 +42,6 @@ export class AnnotationsPanel extends UIPanel {
 		});
 
 		reader.on("noteadded", (note) => {
-
 			this.set(note);
 			this.update();
 		});

@@ -28,3 +28,14 @@ document.addEventListener("click", (e) => {
         bookmarkList.classList.remove("active");
     }
 })
+
+
+// 
+document.addEventListener("click", (e) => {
+    const searchBtn = document.querySelector("#btn-s.box input");
+    const searchPopup = document.querySelector("#toolbar-search-list");
+
+    if (searchPopup && !searchPopup.contains(e.target) && !searchBtn.contains(e.target)) {
+        searchPopup.classList.remove("active");
+    }
+})

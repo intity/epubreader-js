@@ -49,7 +49,6 @@ export class BookmarksPanel extends UIPanel {
 		});
 
 		reader.on("bookmarked", (boolean, cfi) => {
-
 			if (boolean) {
 				this.appendBookmark();
 			} else {
@@ -68,15 +67,16 @@ export class BookmarksPanel extends UIPanel {
 	appendBookmark() {
 
 		const cfi = this.locationCfi;
+
 		if (this.reader.isBookmarked(cfi) > -1) {
 			return;
 		}
 		this.setBookmark(cfi);
 		this.reader.settings.bookmarks.push(cfi);
+
 	}
 
 	removeBookmark(cfi) {
-
 		const _cfi = cfi || this.locationCfi;
 		const index = this.reader.isBookmarked(_cfi);
 		if (index === -1) {
@@ -93,7 +93,6 @@ export class BookmarksPanel extends UIPanel {
 	}
 
 	setBookmark(cfi) {
-
 		const link = new UILink();
 		const item = new UIItem();
 		const btnr = new UISpan().setClass("btn-remove");

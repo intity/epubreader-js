@@ -38,7 +38,9 @@ export class Sidebar {
 
 		container.addTab("btn-t", strings.get(keys[1]), new TocPanel(reader));
 		if (controls.bookmarks) {
-			container.addTab("btn-d", strings.get(keys[2]), new BookmarksPanel(reader));
+			const bookmarkPanel = new BookmarksPanel(reader);
+			container.addTab("btn-d", strings.get(keys[2]), bookmarkPanel);
+			reader.bookmarksPanel = bookmarkPanel;
 		}
 		if (controls.annotations) {
 			const annotationPanel = new AnnotationsPanel(reader);

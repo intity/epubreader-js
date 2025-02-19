@@ -191,7 +191,6 @@ export class Reader {
 	 * @returns The index of the bookmark if it exists, or -1 otherwise.
 	 */
 	isBookmarked(cfi) {
-
 		return this.settings.bookmarks.indexOf(cfi);
 	}
 
