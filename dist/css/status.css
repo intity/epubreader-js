@@ -1,0 +1,100 @@
+#status-bar {
+    border: none;
+}
+
+.status-action #btn-ar.box {
+    position: relative;
+}
+
+#book-list-modal {
+    display: none;
+}
+
+#book-list-modal {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 50px;
+    max-height: 250px;
+    padding: 20px;
+    margin: 0 20px;
+    height: 250px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 14px 0px #00000026;
+    z-index: 10;
+}
+
+#book-list-modal.active {
+    display: block;
+}
+
+.book-modal-content {
+    height: 100%;
+}
+
+.book-grid {
+    height: 100%;
+    max-height: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(150px, 1fr);
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.book-item {
+    border-radius: 16px;
+    border: 1px solid #C7C7C7;
+    text-align: center;
+    cursor: pointer;
+    scroll-snap-align: center;
+    display: inline-grid;
+    align-items: center;
+    grid-template-rows: 1fr auto;
+}
+
+.book-info {}
+
+.book-cover {
+    font-weight: 700;
+}
+
+.book-cover {
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.book-cover {
+    background: #0000001A;
+    color: #000;
+    line-height: 2.4rem;
+}
+
+.book-item.clicked,
+.book-item:hover {
+    border: 2px solid #966412;
+}
+
+.book-item.clicked .book-cover,
+.book-item:hover .book-cover {
+    background: #FFD244;
+    color: #966412;
+    border-bottom-right-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+
+.book-grid::-webkit-scrollbar {
+    width: 5px;
+    display: none;
+}
+
+.book-grid::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #ccc;
+}
+
+.book-grid::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}

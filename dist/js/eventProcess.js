@@ -39,3 +39,17 @@ document.addEventListener("click", (e) => {
         searchPopup.classList.remove("active");
     }
 })
+
+
+// 
+document.querySelectorAll(".book-item").forEach((item) => {
+    item.addEventListener("click", () => {
+        document.querySelectorAll(".book-item").forEach((el) => {
+            el.classList.remove("clicked");
+            el.querySelector(".book-cover").classList.remove("clicked");
+        })
+
+        item.classList.add("clicked");
+        item.querySelector(".book-cover").classList.add("clicked");
+    })
+})
