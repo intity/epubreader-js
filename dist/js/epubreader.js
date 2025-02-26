@@ -1974,7 +1974,9 @@ class Toolbar {
 		function showToc(toc) {
 			let existingToc = document.getElementById("toolbar-toc-list");
 
-			if (!existingToc) {
+			if (existingToc) {
+				existingToc.remove();
+			} else {
 				let tocList = document.createElement("ul");
 				tocList.setAttribute("id", "toolbar-toc-list");
 
@@ -2708,11 +2710,14 @@ class TocPanel extends UIPanel {
 
 		//-- events --//
 
-		reader.on("navigation", (toc) => {
-
-			container.clear();
-			container.add(this.generateToc(toc));
-			this.add(container);
+		reader.on("bookready", () => {
+			reader.book.loaded.navigation.then((toc) => {
+				container.clear();
+				container.add(this.generateToc(toc));
+				this.add(container);
+				console.log(toc);
+				
+			})
 		});
 
 		reader.on("languagechanged", (value) => {
@@ -3720,7 +3725,7 @@ class Reader {
 		});
 
 		this.book.loaded.navigation.then((toc) => {
-			this.emit("navigation", toc);
+			this.emit("bookready", toc);
 		});
 
 		this.rendition.on("click", (e) => {

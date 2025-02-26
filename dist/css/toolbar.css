@@ -69,7 +69,7 @@
 
 /* Hide the import epub file button in menu-2 on toolbar */
 .menu-2 #btn-o {
-	display: none;
+	/* display: none;	 */
 }
 
 

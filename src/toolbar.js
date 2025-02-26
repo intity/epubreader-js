@@ -91,7 +91,9 @@ export class Toolbar {
 		function showToc(toc) {
 			let existingToc = document.getElementById("toolbar-toc-list");
 
-			if (!existingToc) {
+			if (existingToc) {
+				existingToc.remove();
+			} else {
 				let tocList = document.createElement("ul");
 				tocList.setAttribute("id", "toolbar-toc-list");
 

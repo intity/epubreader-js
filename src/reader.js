@@ -103,7 +103,7 @@ export class Reader {
 		});
 
 		this.book.loaded.navigation.then((toc) => {
-			this.emit("navigation", toc);
+			this.emit("bookready", toc);
 		});
 
 		this.rendition.on("click", (e) => {

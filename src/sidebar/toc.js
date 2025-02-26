@@ -18,11 +18,14 @@ export class TocPanel extends UIPanel {
 
 		//-- events --//
 
-		reader.on("navigation", (toc) => {
-
-			container.clear();
-			container.add(this.generateToc(toc));
-			this.add(container);
+		reader.on("bookready", () => {
+			reader.book.loaded.navigation.then((toc) => {
+				container.clear();
+				container.add(this.generateToc(toc));
+				this.add(container);
+				console.log(toc);
+				
+			})
 		});
 
 		reader.on("languagechanged", (value) => {
