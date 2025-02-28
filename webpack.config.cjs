@@ -18,9 +18,14 @@ const config = {
 		usedExports: false
 	},
 	devServer: {
-		static: {
-			directory: path.join(__dirname, "dist")
-		},
+		static: [
+			{
+				directory: path.join(__dirname, "dist")
+			},
+			{
+				directory: path.join(__dirname, "public")
+			}
+		],
 		hot: true,
 		liveReload: true,
 		compress: true,
@@ -77,8 +82,8 @@ module.exports = (env, args) => {
 	}
 
 	if (env.WEBPACK_SERVE) {
-        config.devServer.hot = true; 
-    }
+		config.devServer.hot = true;
+	}
 
 	return config;
 }

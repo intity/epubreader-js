@@ -14,6 +14,10 @@ You can change the ePub it opens by passing a link to <code>bookPath</code> in t
 
 <code>?bookPath=https://s3.amazonaws.com/epubjs/books/alice.epub</code>
 
+or to open through path `public/epub-book` folder
+
+<code>?bookPath=epub-book/[filename].epub</code>
+
 ## Running Locally
 
 Install <a href="https://nodejs.org/en/" style="text-decoration: underline;"><strong>node.js</strong></a>
@@ -27,9 +31,10 @@ npm install
 Next you need to clone the repository into local with below command
 
 ```sh
-git clone <repoUrl>
+git clone <repo_url>
 ```
 
+After that, you need to move to repo directory.
 You can run the reader locally with the command
 
 ```sh

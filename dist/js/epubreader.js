@@ -2954,7 +2954,7 @@ class AnnotationsPanel extends UIPanel {
 
 		//-- events --//
 
-		reader.on("bookready", (cfg) => {
+		reader.on("navigation", (cfg) => {
 
 			cfg.annotations.forEach((note) => {
 
