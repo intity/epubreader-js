@@ -15,13 +15,13 @@
 	<link rel="stylesheet" href="assets/css/main.css">
 
 	<!-- Libs -->
-	<script src="dist/js/libs/jszip.min.js"></script>
-	<script src="dist/js/libs/md5.min.js"></script>
-	<script src="dist/js/libs/epub.min.js"></script>
+	<script src="js/libs/jszip.min.js"></script>
+	<script src="js/libs/md5.min.js"></script>
+	<script src="js/libs/epub.min.js"></script>
 
 	<!-- Reader -->
 	<script type="module">
-		import { Reader } from "./dist/js/epubreader.min.js"
+		import { Reader } from "./js/epubreader.min.js"
 		const url = new URL(window.location)
 		const path = url.searchParams.get("bookPath") || "https://s3.amazonaws.com/moby-dick/"
 		window.onload = (e) => new Reader(path)

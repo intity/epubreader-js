@@ -1,74 +1,5 @@
 /******/ var __webpack_modules__ = ({
 
-/***/ 263:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-var isValue         = __webpack_require__(175)
-  , isPlainFunction = __webpack_require__(873)
-  , assign          = __webpack_require__(596)
-  , normalizeOpts   = __webpack_require__(148)
-  , contains        = __webpack_require__(214);
-
-var d = (module.exports = function (dscr, value/*, options*/) {
-	var c, e, w, options, desc;
-	if (arguments.length < 2 || typeof dscr !== "string") {
-		options = value;
-		value = dscr;
-		dscr = null;
-	} else {
-		options = arguments[2];
-	}
-	if (isValue(dscr)) {
-		c = contains.call(dscr, "c");
-		e = contains.call(dscr, "e");
-		w = contains.call(dscr, "w");
-	} else {
-		c = w = true;
-		e = false;
-	}
-
-	desc = { value: value, configurable: c, enumerable: e, writable: w };
-	return !options ? desc : assign(normalizeOpts(options), desc);
-});
-
-d.gs = function (dscr, get, set/*, options*/) {
-	var c, e, options, desc;
-	if (typeof dscr !== "string") {
-		options = set;
-		set = get;
-		get = dscr;
-		dscr = null;
-	} else {
-		options = arguments[3];
-	}
-	if (!isValue(get)) {
-		get = undefined;
-	} else if (!isPlainFunction(get)) {
-		options = get;
-		get = set = undefined;
-	} else if (!isValue(set)) {
-		set = undefined;
-	} else if (!isPlainFunction(set)) {
-		options = set;
-		set = undefined;
-	}
-	if (isValue(dscr)) {
-		c = contains.call(dscr, "c");
-		e = contains.call(dscr, "e");
-	} else {
-		c = true;
-		e = false;
-	}
-
-	desc = { get: get, set: set, configurable: c, enumerable: e };
-	return !options ? desc : assign(normalizeOpts(options), desc);
-};
-
-
-/***/ }),
-
 /***/ 11:
 /***/ ((module) => {
 
@@ -76,209 +7,6 @@ d.gs = function (dscr, get, set/*, options*/) {
 
 // eslint-disable-next-line no-empty-function
 module.exports = function () {};
-
-
-/***/ }),
-
-/***/ 596:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-module.exports = __webpack_require__(339)() ? Object.assign : __webpack_require__(595);
-
-
-/***/ }),
-
-/***/ 339:
-/***/ ((module) => {
-
-
-
-module.exports = function () {
-	var assign = Object.assign, obj;
-	if (typeof assign !== "function") return false;
-	obj = { foo: "raz" };
-	assign(obj, { bar: "dwa" }, { trzy: "trzy" });
-	return obj.foo + obj.bar + obj.trzy === "razdwatrzy";
-};
-
-
-/***/ }),
-
-/***/ 595:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-var keys  = __webpack_require__(93)
-  , value = __webpack_require__(134)
-  , max   = Math.max;
-
-module.exports = function (dest, src /*, …srcn*/) {
-	var error, i, length = max(arguments.length, 2), assign;
-	dest = Object(value(dest));
-	assign = function (key) {
-		try {
-			dest[key] = src[key];
-		} catch (e) {
-			if (!error) error = e;
-		}
-	};
-	for (i = 1; i < length; ++i) {
-		src = arguments[i];
-		keys(src).forEach(assign);
-	}
-	if (error !== undefined) throw error;
-	return dest;
-};
-
-
-/***/ }),
-
-/***/ 762:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-var _undefined = __webpack_require__(11)(); // Support ES3 engines
-
-module.exports = function (val) { return val !== _undefined && val !== null; };
-
-
-/***/ }),
-
-/***/ 93:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-module.exports = __webpack_require__(380)() ? Object.keys : __webpack_require__(232);
-
-
-/***/ }),
-
-/***/ 380:
-/***/ ((module) => {
-
-
-
-module.exports = function () {
-	try {
-		Object.keys("primitive");
-		return true;
-	} catch (e) {
-		return false;
-	}
-};
-
-
-/***/ }),
-
-/***/ 232:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-var isValue = __webpack_require__(762);
-
-var keys = Object.keys;
-
-module.exports = function (object) { return keys(isValue(object) ? Object(object) : object); };
-
-
-/***/ }),
-
-/***/ 148:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-var isValue = __webpack_require__(762);
-
-var forEach = Array.prototype.forEach, create = Object.create;
-
-var process = function (src, obj) {
-	var key;
-	for (key in src) obj[key] = src[key];
-};
-
-// eslint-disable-next-line no-unused-vars
-module.exports = function (opts1 /*, …options*/) {
-	var result = create(null);
-	forEach.call(arguments, function (options) {
-		if (!isValue(options)) return;
-		process(Object(options), result);
-	});
-	return result;
-};
-
-
-/***/ }),
-
-/***/ 499:
-/***/ ((module) => {
-
-
-
-module.exports = function (fn) {
-	if (typeof fn !== "function") throw new TypeError(fn + " is not a function");
-	return fn;
-};
-
-
-/***/ }),
-
-/***/ 134:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-var isValue = __webpack_require__(762);
-
-module.exports = function (value) {
-	if (!isValue(value)) throw new TypeError("Cannot use null or undefined");
-	return value;
-};
-
-
-/***/ }),
-
-/***/ 214:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-module.exports = __webpack_require__(525)() ? String.prototype.contains : __webpack_require__(521);
-
-
-/***/ }),
-
-/***/ 525:
-/***/ ((module) => {
-
-
-
-var str = "razdwatrzy";
-
-module.exports = function () {
-	if (typeof str.contains !== "function") return false;
-	return str.contains("dwa") === true && str.contains("foo") === false;
-};
-
-
-/***/ }),
-
-/***/ 521:
-/***/ ((module) => {
-
-
-
-var indexOf = String.prototype.indexOf;
-
-module.exports = function (searchString /*, position*/) {
-	return indexOf.call(this, searchString, arguments[1]) > -1;
-};
 
 
 /***/ }),
@@ -448,6 +176,71 @@ module.exports = function (value) {
 
 /***/ }),
 
+/***/ 93:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+module.exports = __webpack_require__(380)() ? Object.keys : __webpack_require__(232);
+
+
+/***/ }),
+
+/***/ 134:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var isValue = __webpack_require__(762);
+
+module.exports = function (value) {
+	if (!isValue(value)) throw new TypeError("Cannot use null or undefined");
+	return value;
+};
+
+
+/***/ }),
+
+/***/ 148:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var isValue = __webpack_require__(762);
+
+var forEach = Array.prototype.forEach, create = Object.create;
+
+var process = function (src, obj) {
+	var key;
+	for (key in src) obj[key] = src[key];
+};
+
+// eslint-disable-next-line no-unused-vars
+module.exports = function (opts1 /*, …options*/) {
+	var result = create(null);
+	forEach.call(arguments, function (options) {
+		if (!isValue(options)) return;
+		process(Object(options), result);
+	});
+	return result;
+};
+
+
+/***/ }),
+
+/***/ 175:
+/***/ ((module) => {
+
+
+
+// ES3 safe
+var _undefined = void 0;
+
+module.exports = function (value) { return value !== _undefined && value !== null; };
+
+
+/***/ }),
+
 /***/ 181:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -461,24 +254,6 @@ var possibleTypes = { "object": true, "function": true, "undefined": true /* doc
 module.exports = function (value) {
 	if (!isValue(value)) return false;
 	return hasOwnProperty.call(possibleTypes, typeof value);
-};
-
-
-/***/ }),
-
-/***/ 873:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-
-var isFunction = __webpack_require__(80);
-
-var classRe = /^\s*class[\s{/}]/, functionToString = Function.prototype.toString;
-
-module.exports = function (value) {
-	if (!isFunction(value)) return false;
-	if (classRe.test(functionToString.call(value))) return false;
-	return true;
 };
 
 
@@ -504,15 +279,240 @@ module.exports = function (value) {
 
 /***/ }),
 
-/***/ 175:
+/***/ 214:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+module.exports = __webpack_require__(525)() ? String.prototype.contains : __webpack_require__(521);
+
+
+/***/ }),
+
+/***/ 232:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var isValue = __webpack_require__(762);
+
+var keys = Object.keys;
+
+module.exports = function (object) { return keys(isValue(object) ? Object(object) : object); };
+
+
+/***/ }),
+
+/***/ 263:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var isValue         = __webpack_require__(175)
+  , isPlainFunction = __webpack_require__(873)
+  , assign          = __webpack_require__(596)
+  , normalizeOpts   = __webpack_require__(148)
+  , contains        = __webpack_require__(214);
+
+var d = (module.exports = function (dscr, value/*, options*/) {
+	var c, e, w, options, desc;
+	if (arguments.length < 2 || typeof dscr !== "string") {
+		options = value;
+		value = dscr;
+		dscr = null;
+	} else {
+		options = arguments[2];
+	}
+	if (isValue(dscr)) {
+		c = contains.call(dscr, "c");
+		e = contains.call(dscr, "e");
+		w = contains.call(dscr, "w");
+	} else {
+		c = w = true;
+		e = false;
+	}
+
+	desc = { value: value, configurable: c, enumerable: e, writable: w };
+	return !options ? desc : assign(normalizeOpts(options), desc);
+});
+
+d.gs = function (dscr, get, set/*, options*/) {
+	var c, e, options, desc;
+	if (typeof dscr !== "string") {
+		options = set;
+		set = get;
+		get = dscr;
+		dscr = null;
+	} else {
+		options = arguments[3];
+	}
+	if (!isValue(get)) {
+		get = undefined;
+	} else if (!isPlainFunction(get)) {
+		options = get;
+		get = set = undefined;
+	} else if (!isValue(set)) {
+		set = undefined;
+	} else if (!isPlainFunction(set)) {
+		options = set;
+		set = undefined;
+	}
+	if (isValue(dscr)) {
+		c = contains.call(dscr, "c");
+		e = contains.call(dscr, "e");
+	} else {
+		c = true;
+		e = false;
+	}
+
+	desc = { get: get, set: set, configurable: c, enumerable: e };
+	return !options ? desc : assign(normalizeOpts(options), desc);
+};
+
+
+/***/ }),
+
+/***/ 339:
 /***/ ((module) => {
 
 
 
-// ES3 safe
-var _undefined = void 0;
+module.exports = function () {
+	var assign = Object.assign, obj;
+	if (typeof assign !== "function") return false;
+	obj = { foo: "raz" };
+	assign(obj, { bar: "dwa" }, { trzy: "trzy" });
+	return obj.foo + obj.bar + obj.trzy === "razdwatrzy";
+};
 
-module.exports = function (value) { return value !== _undefined && value !== null; };
+
+/***/ }),
+
+/***/ 380:
+/***/ ((module) => {
+
+
+
+module.exports = function () {
+	try {
+		Object.keys("primitive");
+		return true;
+	} catch (e) {
+		return false;
+	}
+};
+
+
+/***/ }),
+
+/***/ 499:
+/***/ ((module) => {
+
+
+
+module.exports = function (fn) {
+	if (typeof fn !== "function") throw new TypeError(fn + " is not a function");
+	return fn;
+};
+
+
+/***/ }),
+
+/***/ 521:
+/***/ ((module) => {
+
+
+
+var indexOf = String.prototype.indexOf;
+
+module.exports = function (searchString /*, position*/) {
+	return indexOf.call(this, searchString, arguments[1]) > -1;
+};
+
+
+/***/ }),
+
+/***/ 525:
+/***/ ((module) => {
+
+
+
+var str = "razdwatrzy";
+
+module.exports = function () {
+	if (typeof str.contains !== "function") return false;
+	return str.contains("dwa") === true && str.contains("foo") === false;
+};
+
+
+/***/ }),
+
+/***/ 595:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var keys  = __webpack_require__(93)
+  , value = __webpack_require__(134)
+  , max   = Math.max;
+
+module.exports = function (dest, src /*, …srcn*/) {
+	var error, i, length = max(arguments.length, 2), assign;
+	dest = Object(value(dest));
+	assign = function (key) {
+		try {
+			dest[key] = src[key];
+		} catch (e) {
+			if (!error) error = e;
+		}
+	};
+	for (i = 1; i < length; ++i) {
+		src = arguments[i];
+		keys(src).forEach(assign);
+	}
+	if (error !== undefined) throw error;
+	return dest;
+};
+
+
+/***/ }),
+
+/***/ 596:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+module.exports = __webpack_require__(339)() ? Object.assign : __webpack_require__(595);
+
+
+/***/ }),
+
+/***/ 762:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var _undefined = __webpack_require__(11)(); // Support ES3 engines
+
+module.exports = function (val) { return val !== _undefined && val !== null; };
+
+
+/***/ }),
+
+/***/ 873:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var isFunction = __webpack_require__(80);
+
+var classRe = /^\s*class[\s{/}]/, functionToString = Function.prototype.toString;
+
+module.exports = function (value) {
+	if (!isFunction(value)) return false;
+	if (classRe.test(functionToString.call(value))) return false;
+	return true;
+};
 
 
 /***/ })
@@ -561,17 +561,30 @@ module.exports = function (value) { return value !== _undefined && value !== nul
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ })();
 /******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  m: () => (/* binding */ Reader)
+  Reader: () => (/* binding */ Reader)
 });
 
 // EXTERNAL MODULE: ./node_modules/event-emitter/index.js
 var event_emitter = __webpack_require__(68);
-;// CONCATENATED MODULE: ./src/utils.js
+;// ./src/utils.js
 const d = (obj, prop) => obj ? obj[prop] : undefined
 
 const q = (src, dst, ext, prop) => {
@@ -630,7 +643,7 @@ const detectMobile = () => {
     ]
     return matches.some((i) => navigator.userAgent.match(i))
 }
-;// CONCATENATED MODULE: ./src/storage.js
+;// ./src/storage.js
 class Storage {
 
 	constructor() {
@@ -731,7 +744,7 @@ class Storage {
 		}
 	}
 }
-;// CONCATENATED MODULE: ./src/strings.js
+;// ./src/strings.js
 class Strings {
 
 	constructor(reader) {
@@ -939,7 +952,7 @@ class Strings {
 
 	get(key) { return this.values[this.language][key] || "???"; }
 }
-;// CONCATENATED MODULE: ./src/ui.js
+;// ./src/ui.js
 /**
  * @author mrdoob https://github.com/mrdoob/ui.js
  */
@@ -1704,7 +1717,7 @@ class UIBox extends UIElement {
 		this.add(items);
 	}
 }
-;// CONCATENATED MODULE: ./src/toolbar.js
+;// ./src/toolbar.js
 
 
 class Toolbar {
@@ -1924,7 +1937,7 @@ class Toolbar {
 		}
 	}
 }
-;// CONCATENATED MODULE: ./src/content.js
+;// ./src/content.js
 
 
 class Content {
@@ -2043,7 +2056,7 @@ class Content {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/toc.js
+;// ./src/sidebar/toc.js
 
 
 class TocPanel extends UIPanel {
@@ -2134,7 +2147,7 @@ class TocPanel extends UIPanel {
 		return list;
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/bookmarks.js
+;// ./src/sidebar/bookmarks.js
 
 
 class BookmarksPanel extends UIPanel {
@@ -2271,7 +2284,7 @@ class BookmarksPanel extends UIPanel {
 		this.bookmarks.add(item);
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/annotations.js
+;// ./src/sidebar/annotations.js
 
 
 class AnnotationsPanel extends UIPanel {
@@ -2381,7 +2394,7 @@ class AnnotationsPanel extends UIPanel {
 		this.update();
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/search.js
+;// ./src/sidebar/search.js
 
 
 class SearchPanel extends UIPanel {
@@ -2456,7 +2469,7 @@ class SearchPanel extends UIPanel {
 		this.items.add(item);
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/settings.js
+;// ./src/sidebar/settings.js
 
 
 class SettingsPanel extends UIPanel {
@@ -2627,7 +2640,7 @@ class SettingsPanel extends UIPanel {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar/metadata.js
+;// ./src/sidebar/metadata.js
 
 
 class MetadataPanel extends UIPanel {
@@ -2693,7 +2706,7 @@ class MetadataPanel extends UIPanel {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/sidebar.js
+;// ./src/sidebar.js
 
 
 
@@ -2773,7 +2786,7 @@ class Sidebar {
 		});
 	}
 }
-;// CONCATENATED MODULE: ./src/notedlg.js
+;// ./src/notedlg.js
 
 
 
@@ -2846,7 +2859,7 @@ class NoteDlg {
         });
     }
 }
-;// CONCATENATED MODULE: ./src/reader.js
+;// ./src/reader.js
 
 
 
@@ -3216,7 +3229,7 @@ class Reader {
 }
 
 event_emitter(Reader.prototype);
-var __webpack_exports__Reader = __webpack_exports__.m;
+var __webpack_exports__Reader = __webpack_exports__.Reader;
 export { __webpack_exports__Reader as Reader };
 
 //# sourceMappingURL=epubreader.js.map
