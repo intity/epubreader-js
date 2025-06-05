@@ -195,7 +195,56 @@ export class Strings {
 
 				"notedlg/label": "Заметка",
 				"notedlg/add": "Добавить"
-			}
+			},
+			zh: {
+				"toolbar/sidebar": "侧边栏",
+				"toolbar/prev": "上一页",
+				"toolbar/next": "下一页",
+				"toolbar/openbook": "打开书籍",
+				"toolbar/openbook/error": "您的浏览器不支持所需功能。\n请使用现代浏览器如谷歌Chrome或火狐Firefox。",
+				"toolbar/bookmark": "加为书签",
+				"toolbar/fullscreen": "全屏",
+
+				"sidebar/close": "关闭侧边栏",
+				"sidebar/contents": "目录",
+				"sidebar/bookmarks": "书签",
+				"sidebar/bookmarks/add": "添加",
+				"sidebar/bookmarks/remove": "移除",
+				"sidebar/bookmarks/clear": "清空",
+				"sidebar/annotations": "注解",
+				"sidebar/annotations/add": "添加",
+				"sidebar/annotations/remove": "移除",
+				"sidebar/annotations/clear": "清空",
+				"sidebar/annotations/anchor": "锚定",
+				"sidebar/annotations/cancel": "取消",
+
+				"sidebar/search": "搜索",
+				"sidebar/search/placeholder": "搜索",
+				"sidebar/settings": "设置",
+				"sidebar/settings/language": "语言",
+				"sidebar/settings/fontsize": "字体大小 (%)",
+				"sidebar/settings/flow": "流模式", // Scrolled = "滚动模式"
+				"sidebar/settings/pagination": ["分页模式", "生成分页"], 
+				"sidebar/settings/spread": "双页布局",
+				"sidebar/settings/spread/minwidth": "最小双页宽度",
+				"sidebar/metadata": "元数据",
+				"sidebar/metadata/title": "标题",
+				"sidebar/metadata/creator": "作者",
+				"sidebar/metadata/description": "描述",
+				"sidebar/metadata/pubdate": "出版日期",
+				"sidebar/metadata/publisher": "出版商",
+				"sidebar/metadata/identifier": "标识符",
+				"sidebar/metadata/language": "语言",
+				"sidebar/metadata/rights": "版权",
+				"sidebar/metadata/modified_date": "修改日期",
+				"sidebar/metadata/layout": "布局",  // rendition:layout
+				"sidebar/metadata/flow": "流模式",  // rendition:flow
+				"sidebar/metadata/spread": "双页布局",  // rendition:spread
+				"sidebar/metadata/direction": "阅读方向",  // page-progression-direction
+
+				"notedlg/label": "笔记",
+				"notedlg/add": "添加"
+			},
 		};
 
 		reader.on("languagechanged", (value) => {

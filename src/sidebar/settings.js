@@ -25,7 +25,8 @@ export class SettingsPanel extends UIPanel {
 			en: "English",
 			fr: "French",
 			ja: "Japanese",
-			ru: "Russian"
+			ru: "Russian",
+			zh: "Chinese"
 		});
 		language.dom.onchange = (e) => {
 
